@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using library_management_system.Exception;
 
 namespace library_management_system.model;
 
@@ -34,5 +35,28 @@ public class Library
         List<LibraryUser> list = new List<LibraryUser>(users.Values);
         list.Sort(comparator);
         return list;
+    }
+    
+    public void addPublication (Publication publication) {
+        if (publications.ContainsKey(publication.title)) {
+            throw new PublicationAlreadyExistsException("Publikacja o takim tytule już istnieje " + publication.title);
+        }
+        publications.Add(publication.title, publication);
+    }
+
+    public void addUser(LibraryUser user) {
+        if (users.ContainsKey(user.pesel)) {
+            throw new UserAlreadyExistsException("Użytkownik ze wskazanym peselem już istnieje " + user.pesel);
+        }
+        users.Add(user.pesel, user);
+    }
+    
+    public bool removePublication(Publication pub) {
+        if (publications.ContainsValue(pub)) {
+            publications.Remove(pub.title);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -24,15 +24,23 @@ public class TestMethod
 
         DataReader dataReader = new DataReader(consolePrinter);
         LibraryUser user = dataReader.createLibraryUser();
-        users.Add(user);
+        // users.Add(user);
         Console.WriteLine("=========================");
         consolePrinter.PrintUsers(users);
         Console.WriteLine("=========================");
 
-        Book book = dataReader.readAndCreateBook();
+        Book book1 = dataReader.readAndCreateBook();
+        Book book2 = dataReader.readAndCreateBook();
         ICollection<Publication> publications = new List<Publication>();
-        publications.Add(book);
         
         consolePrinter.PrintBooks(publications);
+        
+        FileManager fileManager = new FileManagerBuilder(consolePrinter, dataReader).build();
+        Library library = new Library();
+        library.addPublication(book1);
+        library.addPublication(book2);
+        library.addUser(user);
+        fileManager.exportData(library);
+        
     }
 }
