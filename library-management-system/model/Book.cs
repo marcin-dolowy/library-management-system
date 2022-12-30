@@ -7,7 +7,8 @@ public class Book : Publication
     public int pages { get; set; }
     public string isbn { get; set; }
 
-    public Book(int year, string title, string publisher, string author, int pages, string isbn) : base(year, title, publisher)
+    public Book(string title, string author, int year, int pages, string publisher, string isbn) : base(year, title,
+        publisher)
     {
         this.author = author;
         this.pages = pages;

@@ -40,7 +40,7 @@ public class ConsolePrinter
             .ForEach(PrintLine);
     }
 
-    private void PrintLine(string text)
+    public void PrintLine(string text)
     {
         Console.WriteLine(text.ToUpper());
     }
