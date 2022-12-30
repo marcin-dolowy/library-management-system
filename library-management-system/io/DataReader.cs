@@ -51,4 +51,8 @@ public class DataReader
         string pesel = Console.ReadLine();
         return new LibraryUser(firstName, lastName, pesel);
     }
+    
+    public String GetString() {
+        return Console.ReadLine();
+    }
 }
