@@ -1,9 +1,9 @@
-using System.Collections.ObjectModel;
 using library_management_system.Exception;
 using library_management_system.model;
 using InvalidDataException = System.IO.InvalidDataException;
 
 namespace library_management_system.io.file;
+
 
 public class CsvFileManager : FileManager
 {
@@ -26,7 +26,7 @@ public class CsvFileManager : FileManager
     {
         try
         {
-            string[] lines = System.IO.File.ReadAllLines(FILE_NAME);
+            string[] lines = File.ReadAllLines(FILE_NAME);
             foreach (string line in lines)
             {
                 var publication = createObjectFromString(line);
@@ -47,7 +47,7 @@ public class CsvFileManager : FileManager
     {
         try
         {
-            string[] lines = System.IO.File.ReadAllLines(USERS_FILE_NAME);
+            string[] lines = File.ReadAllLines(USERS_FILE_NAME);
             foreach (string line in lines)
             {
                 var user = createUserFromString(line);
