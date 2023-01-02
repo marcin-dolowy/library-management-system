@@ -1,62 +1,92 @@
+using System.Text.RegularExpressions;
 using library_management_system.model;
+using InvalidDataException = library_management_system.Exception.InvalidDataException;
 
 namespace library_management_system.io;
 
 public class DataReader
 {
-    private ConsolePrinter printer;
+    private ConsolePrinter _printer;
 
-    public DataReader(ConsolePrinter printer) {
-        this.printer = printer;
+    public DataReader(ConsolePrinter printer)
+    {
+        this._printer = printer;
     }
 
-    public Book readAndCreateBook() {
-        printer.PrintLine("Tytuł:");
+    public Book readAndCreateBook()
+    {
+        _printer.PrintLine("Tytuł:");
         string title = Console.ReadLine();
-        printer.PrintLine("Autor:");
+        _printer.PrintLine("Autor:");
         string author = Console.ReadLine();
-        printer.PrintLine("Wydawnictwo:");
+        _printer.PrintLine("Wydawnictwo:");
         string publisher = Console.ReadLine();
-        printer.PrintLine("ISBN:");
+        _printer.PrintLine("ISBN:");
         string isbn = Console.ReadLine();
-        printer.PrintLine("Rok wydania:");
+        if (!IsValidIsbn(isbn))
+            throw new InvalidDataException();
+        _printer.PrintLine("Rok wydania:");
         int releaseDate = int.Parse(Console.ReadLine());
-        printer.PrintLine("Liczba stron:");
+        _printer.PrintLine("Liczba stron:");
         int pages = int.Parse(Console.ReadLine());
         return new Book(title, author, releaseDate, pages, publisher, isbn);
     }
 
-    public Magazine readAndCreateMagazine() {
-        printer.PrintLine("Tytuł:");
+    public Magazine readAndCreateMagazine()
+    {
+        _printer.PrintLine("Tytuł:");
         string title = Console.ReadLine();
-        printer.PrintLine("Wydawnictwo:");
+        _printer.PrintLine("Wydawnictwo:");
         string publisher = Console.ReadLine();
-        printer.PrintLine("Język:");
+        _printer.PrintLine("Język:");
         string language = Console.ReadLine();
-        printer.PrintLine("Rok wydania:");
+        _printer.PrintLine("Rok wydania:");
         int year = int.Parse(Console.ReadLine());
-        printer.PrintLine("Miesiąc:");
+        _printer.PrintLine("Miesiąc:");
         int month = int.Parse(Console.ReadLine());
-        printer.PrintLine("Dzień:");
+        _printer.PrintLine("Dzień:");
         int day = int.Parse(Console.ReadLine());
         return new Magazine(title, publisher, language, year, month, day);
     }
 
-    public LibraryUser createLibraryUser() {
-        printer.PrintLine("Imię");
+    public LibraryUser createLibraryUser()
+    {
+        _printer.PrintLine("Imię");
         string firstName = Console.ReadLine();
-        printer.PrintLine("Nazwisko");
+        _printer.PrintLine("Nazwisko");
         string lastName = Console.ReadLine();
-        printer.PrintLine("Pesel");
+        _printer.PrintLine("Pesel");
         string pesel = Console.ReadLine();
         return new LibraryUser(firstName, lastName, pesel);
     }
-    
-    public String GetString() {
+
+    public String GetString()
+    {
         return Console.ReadLine();
     }
-    
-    public int GetInt() {
+
+    public int GetInt()
+    {
         return int.Parse(Console.ReadLine());
+    }
+
+    private static bool IsValidIsbn(string isbn)
+    {
+        if (isbn.Length != 10 && isbn.Length != 13)
+        {
+            return false;
+        }
+
+        if (!Regex.IsMatch(isbn, @"^\d{9}[\d|X]$|^\d{12}[\d|X]$"))
+        {
+            return false;
+        }
+
+        return true;
+    }
+    
+    public bool ContainsOnlyDigits(string input)
+    {
+        return Regex.IsMatch(input, @"^\d+$");
     }
 }

@@ -35,7 +35,7 @@ public class ConsolePrinter
     public void PrintUsers(IEnumerable<LibraryUser> users)
     {
         users
-            .Select(user => user.ToString())
+            .Select(user => user.ToString().ChangeSpacesToDash())
             .ToList()
             .ForEach(PrintLine);
     }
