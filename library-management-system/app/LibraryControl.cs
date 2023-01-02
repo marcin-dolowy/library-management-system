@@ -97,7 +97,7 @@ class LibraryControl
 
     private void printUsers()
     {
-        printer.PrintUsers(library.getSortedUsers(Comparer<LibraryUser>.Create((x, y) =>
+        printer.PrintUsers(library.GetSortedUsers(Comparer<LibraryUser>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.LastName, y.LastName))));
     }
 
@@ -106,7 +106,7 @@ class LibraryControl
         LibraryUser libraryUser = dataReader.createLibraryUser();
         try
         {
-            library.addUser(libraryUser);
+            library.AddUser(libraryUser);
         }
         catch (UserAlreadyExistsException e)
         {
@@ -136,7 +136,7 @@ class LibraryControl
 
     private void printMagazines()
     {
-        printer.PrintMagazines(library.getSortedPublications(Comparer<Publication>.Create((x, y) =>
+        printer.PrintMagazines(library.GetSortedPublications(Comparer<Publication>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.Title, y.Title))));
     }
 
@@ -145,7 +145,7 @@ class LibraryControl
         try
         {
             Magazine magazine = dataReader.readAndCreateMagazine();
-            library.addPublication(magazine);
+            library.AddPublication(magazine);
         }
         catch (System.Exception e)
         {
@@ -158,7 +158,7 @@ class LibraryControl
         try
         {
             Magazine magazine = dataReader.readAndCreateMagazine();
-            if (library.removePublication(magazine))
+            if (library.RemovePublication(magazine))
                 printer.PrintLine("Usunięto magazyn");
             else
                 printer.PrintLine("Brak wskazanego magazynu");
@@ -186,7 +186,7 @@ class LibraryControl
 
     private void printBooks()
     {
-        printer.PrintBooks(library.getSortedPublications(Comparer<Publication>.Create((x, y) =>
+        printer.PrintBooks(library.GetSortedPublications(Comparer<Publication>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.Title, y.Title))));
     }
 
@@ -195,7 +195,7 @@ class LibraryControl
         try
         {
             Book book = dataReader.readAndCreateBook();
-            library.addPublication(book);
+            library.AddPublication(book);
         }
         catch (System.Exception e)
         {
@@ -208,7 +208,7 @@ class LibraryControl
         try
         {
             Book book = dataReader.readAndCreateBook();
-            if (library.removePublication(book))
+            if (library.RemovePublication(book))
                 printer.PrintLine("Usunięto książkę");
             else
                 printer.PrintLine("Brak wskazanej książki");

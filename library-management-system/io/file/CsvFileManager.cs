@@ -30,7 +30,7 @@ public class CsvFileManager : FileManager
             foreach (string line in lines)
             {
                 var publication = createObjectFromString(line);
-                library.addPublication(publication);
+                library.AddPublication(publication);
             }
         }
         catch (FileNotFoundException e)
@@ -51,7 +51,7 @@ public class CsvFileManager : FileManager
             foreach (string line in lines)
             {
                 var user = createUserFromString(line);
-                library.addUser(user);
+                library.AddUser(user);
             }
         }
         catch (FileNotFoundException e)

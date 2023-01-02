@@ -1,57 +1,45 @@
-﻿using System.Collections.ObjectModel;
-using library_management_system.Exception;
+﻿using library_management_system.Exception;
 
 namespace library_management_system.model;
 
 public class Library
 {
-    private Dictionary<string, Publication> publications = new Dictionary<string, Publication>();
-    private Dictionary<string, LibraryUser> users = new Dictionary<string, LibraryUser>();
+    public Dictionary<string, Publication> Publications { get; } = new();
 
-    public Dictionary<string, Publication> Publications
-    {
-        get { return publications; }
-    }
+    public Dictionary<string, LibraryUser> Users { get; } = new();
 
-    public Dictionary<string, LibraryUser> Users
+    public ICollection<Publication> GetSortedPublications(IComparer<Publication> comparer)
     {
-        get { return users; }
-    }
-
-    public ICollection<Publication> getSortedPublications(IComparer<Publication> comparer)
-    {
-        List<Publication> list = new List<Publication>(publications.Values);
+        List<Publication> list = new List<Publication>(Publications.Values);
         list.Sort(comparer);
         return list;
     }
 
-    public ICollection<LibraryUser> getSortedUsers(IComparer<LibraryUser> comparator)
+    public ICollection<LibraryUser> GetSortedUsers(IComparer<LibraryUser> comparator)
     {
-        List<LibraryUser> list = new List<LibraryUser>(users.Values);
+        List<LibraryUser> list = new List<LibraryUser>(Users.Values);
         list.Sort(comparator);
         return list;
     }
     
-    public void addPublication (Publication publication) {
-        if (publications.ContainsKey(publication.Title)) {
+    public void AddPublication (Publication publication) {
+        if (Publications.ContainsKey(publication.Title)) {
             throw new PublicationAlreadyExistsException("Publikacja o takim tytule już istnieje " + publication.Title);
         }
-        publications.Add(publication.Title, publication);
+        Publications.Add(publication.Title, publication);
     }
 
-    public void addUser(LibraryUser user) {
-        if (users.ContainsKey(user.Pesel)) {
+    public void AddUser(LibraryUser user) {
+        if (Users.ContainsKey(user.Pesel)) {
             throw new UserAlreadyExistsException("Użytkownik ze wskazanym peselem już istnieje " + user.Pesel);
         }
-        users.Add(user.Pesel, user);
+        Users.Add(user.Pesel, user);
     }
     
-    public bool removePublication(Publication pub) {
-        if (publications.ContainsValue(pub)) {
-            publications.Remove(pub.Title);
-            return true;
-        } else {
-            return false;
-        }
+    public bool RemovePublication(Publication pub)
+    {
+        if (!Publications.ContainsValue(pub)) return false;
+        Publications.Remove(pub.Title);
+        return true;
     }
 }
