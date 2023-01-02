@@ -4,15 +4,20 @@ using InvalidDataException = System.IO.InvalidDataException;
 
 namespace library_management_system.io.file;
 
-
 public class CsvFileManager : FileManager
 {
-    private static string FILE_NAME =
-        @"C:\Users\huber\RiderProjects\library-management-system\library-management-system\io\file\Library.csv";
+    private static string FILE_NAME = "Library.csv";
 
-    private static string USERS_FILE_NAME =
-        @"C:\Users\huber\RiderProjects\library-management-system\library-management-system\io\file\Library_users.csv";
+    private static string USERS_FILE_NAME = "Library_users.csv";
 
+
+    public CsvFileManager()
+    {
+        string directory3LevelsUp = Directory
+            .GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!.FullName)!
+            .FullName;
+        string goodDirectory = Path.Combine(directory3LevelsUp, "file", FILE_NAME);
+    }
 
     public Library importData()
     {
