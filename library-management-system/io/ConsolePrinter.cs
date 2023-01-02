@@ -4,7 +4,7 @@ namespace library_management_system.io;
 
 public class ConsolePrinter
 {
-    public void PrintBooks(ICollection<Publication> publications)
+    public void PrintBooks(IEnumerable<Publication> publications)
     {
         long count = publications.Where(p => p is Book).Select(p => p.ToString()).Select(i =>
         {
@@ -18,7 +18,7 @@ public class ConsolePrinter
         }
     }
 
-    public void PrintMagazines(ICollection<Publication> publications)
+    public void PrintMagazines(IEnumerable<Publication> publications)
     {
         long count = publications.Where(p => p is Magazine).Select(p => p.ToString()).Select(i =>
         {
@@ -32,7 +32,7 @@ public class ConsolePrinter
         }
     }
 
-    public void PrintUsers(ICollection<LibraryUser> users)
+    public void PrintUsers(IEnumerable<LibraryUser> users)
     {
         users
             .Select(user => user.ToString())
