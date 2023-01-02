@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.ComponentModel;
+using System.Security.Cryptography;
 using library_management_system.Exception;
 using library_management_system.io;
 using library_management_system.io.file;
@@ -41,41 +42,41 @@ class LibraryControl
             option = getOption();
             switch (option)
             {
-                case 0:
+                case (int) Option.ADD_BOOK:
                     addBook();
                     break;
-                case 1:
+                case (int) Option.ADD_MAGAZINE:
                     addMagazine();
                     break;
-                case 2:
+                case (int) Option.PRINT_BOOKS:
                     printBooks();
                     break;
-                case 3:
+                case (int) Option.PRINT_MAGAZINES:
                     printMagazines();
                     break;
-                case 4:
+                case (int) Option.DELETE_BOOK:
                     deleteBook();
                     break;
-                case 5:
+                case (int) Option.DELETE_MAGAZINE:
                     deleteMagazine();
                     break;
-                case 6:
+                case (int) Option.ADD_USER:
                     addUser();
                     break;
-                case 7:
+                case (int) Option.PRINT_USERS:
                     printUsers();
                     break;
-                case 8:
+                case (int) Option.FIND_BOOK:
                     findBook();
                     break;
-                case 9:
+                case (int) Option.EXIT:
                     exit();
                     break;
                 default:
                     printer.PrintLine("Brak takiej opcji. Wybierz poprawną.");
                     break;
             }
-        } while (option != 9);
+        } while (option != (int) Option.EXIT);
     }
 
     private void findBook() // DONE
@@ -102,23 +103,10 @@ class LibraryControl
         {
             printer.PrintLine(notFoundMessage);
         }
-
-        // library.findPublicationByTitle(title)
-        //     .map(Publication::toString)
-        //     .ifPresentOrElse(System.out::println, () -> System.out.println(notFoundMessage));
     }
 
-    private void printUsers() // NIE WIEM JAK TO ZROBIC
+    private void printUsers()
     {
-        // printer.printUsers(library.getSortedUsers(
-        //         (p1, p2) -> p1.getLastName().compareToIgnoreCase(p2.getLastName())
-        //     Comparator.comparing(User::getLastName, String.CASE_INSENSITIVE_ORDER)
-        // ));
-
-        // printer.PrintUsers(library.getSortedUsers((p1, p2) => p1.LastName.CompareTo
-        // (p2.LastName, StringComparison.OrdinalIgnoreCase)));
-        
-        //DO SPRAWDZENIA!!!!!!!!!!
         printer.PrintUsers(library.getSortedUsers(Comparer<LibraryUser>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.LastName, y.LastName))));
     }
@@ -158,18 +146,6 @@ class LibraryControl
 
     private void printMagazines()
     {
-//         printer.PrintMagazines(library.getSortedPublications(
-// //                (p1, p2) -> p1.getTitle().compareToIgnoreCase(p2.getTitle())
-//             IComparator.comparing(Publication::getTitle, String.CASE_INSENSITIVE_ORDER)
-//         ));
-
-
-        //??????????????
-        // printer.PrintUsers(library.getSortedUsers(
-        //     (x, y) => string.Compare(x.LastName, y.LastName, StringComparison.OrdinalIgnoreCase)
-        // ));
-
-        // DO SPRAWDZENIA!!!!!!!!!
         printer.PrintMagazines(library.getSortedPublications(Comparer<Publication>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.Title, y.Title))));
     }
@@ -220,13 +196,6 @@ class LibraryControl
 
     private void printBooks()
     {
-//         printer.PrintLine(library.getSortedPublications(
-// //                (p1, p2) -> p1.getTitle().compareToIgnoreCase(p2.getTitle())
-//             Comparator.comparing(Publication::getTitle, String.CASE_INSENSITIVE_ORDER)
-//         ));
-
-
-        // DO SPRAWDZENIA!!!!!!!!!
         printer.PrintBooks(library.getSortedPublications(Comparer<Publication>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.Title, y.Title))));
     }
@@ -263,15 +232,41 @@ class LibraryControl
     private void printOptions()
     {
         printer.PrintLine("Wybierz opcje:");
-        string[] options =
+        foreach (Option value in Enum.GetValues(typeof(Option)))
         {
-            "wyjście z programu", "dodanie nowej książki", "dodanie nowego magazynu", "wyświetl dostępne książki",
-            "wyświetl dostępne magazyny", "Usuń książkę", "Usuń magazyn", "Dodaj czytelnika", "Wyświetl czytelników",
-            "Wyszukaj książkę"
-        };
-        foreach (var option in options)
-        {
-            printer.PrintLine(option);
+            printer.PrintLine($"{(int)value} - {GetEnumDescription(value)}");
         }
+    }
+    
+    public static string GetEnumDescription(Enum value)
+    {
+        var fieldInfo = value.GetType().GetField(value.ToString());
+        var attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
+        return attributes.Length > 0 ? attributes[0].Description : value.ToString();
+    }
+    
+    private enum Option {
+        [Description("wyjście z programu")]
+        EXIT = 0,
+        [Description("dodanie nowej książki")]
+        ADD_BOOK = 1,
+        [Description("dodanie nowego magazynu")]
+        ADD_MAGAZINE = 2,
+        [Description("wyświetl dostępne książki")]
+        PRINT_BOOKS = 3,
+        [Description("wyświetl dostępne magazyny")]
+        PRINT_MAGAZINES = 4,
+        [Description("Usuń książkę")]
+        DELETE_BOOK = 5,
+        [Description("Usuń magazyn")]
+        DELETE_MAGAZINE = 6,
+        [Description("Dodaj czytelnika")]
+        ADD_USER = 7,
+        [Description("Wyświetl czytelników")]
+        PRINT_USERS = 8,
+        [Description("Wyszukaj książkę")]
+        FIND_BOOK = 9
+
+        
     }
 }
