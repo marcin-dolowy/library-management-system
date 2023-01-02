@@ -1,6 +1,6 @@
 ﻿namespace library_management_system.model;
 
-public abstract class User : CsvConvertible
+public abstract class User : ICsvConvertible
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -36,5 +36,5 @@ public abstract class User : CsvConvertible
         return FirstName + " " + LastName + " " + Pesel;
     }
 
-    public abstract string toCsv();
+    public abstract string ToCsv();
 }

@@ -124,14 +124,14 @@ public class CsvFileManager : FileManager
         exportToCsv(publications, FILE_NAME);
     }
 
-    private void exportToCsv<T>(ICollection<T> collection, string fileName) where T : CsvConvertible
+    private void exportToCsv<T>(ICollection<T> collection, string fileName) where T : ICsvConvertible
     {
         try
         {
             using StreamWriter file = new(fileName);
             foreach (T element in collection)
             {
-                file.WriteLine(element.toCsv());
+                file.WriteLine(element.ToCsv());
             }
         }
         catch (IOException e)

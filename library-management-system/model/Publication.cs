@@ -1,6 +1,6 @@
 ﻿namespace library_management_system.model;
 
-public abstract class Publication : CsvConvertible, IComparable<Publication>
+public abstract class Publication : ICsvConvertible, IComparable<Publication>
 {
     public int Year { get; set; }
     public string Title { get; set; }
@@ -18,7 +18,7 @@ public abstract class Publication : CsvConvertible, IComparable<Publication>
         return Title + "; " + Publisher + "; " + Year;
     }
 
-    public abstract string toCsv();
+    public abstract string ToCsv();
 
     protected bool Equals(Publication other)
     {

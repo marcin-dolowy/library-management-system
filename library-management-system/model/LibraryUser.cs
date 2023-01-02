@@ -47,7 +47,7 @@ public class LibraryUser : User
         return HashCode.Combine(base.GetHashCode(), publicationHistory, borrowedPublications);
     }
 
-    public override string toCsv()
+    public override string ToCsv()
     {
         return FirstName + ";" + LastName + ";" + Pesel;
     }

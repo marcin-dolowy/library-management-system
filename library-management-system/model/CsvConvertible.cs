@@ -1,6 +1,6 @@
 ﻿namespace library_management_system.model;
 
-public interface CsvConvertible
+public interface ICsvConvertible
 {
-    String toCsv();
+    string ToCsv();
 }

@@ -20,7 +20,7 @@ public class Book : Publication
         return base.ToString() + "; " + Author + "; " + Pages + "; " + Isbn;
     }
 
-    public override string toCsv()
+    public override string ToCsv()
     {
         return Type + ";" +
                Title + ";" +

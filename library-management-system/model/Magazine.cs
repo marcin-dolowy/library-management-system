@@ -15,7 +15,7 @@ public class Magazine : Publication
         this.language = language;
     }
 
-    public override string toCsv()
+    public override string ToCsv()
     {
         return TYPE + ";" +
                Title + ";" +
