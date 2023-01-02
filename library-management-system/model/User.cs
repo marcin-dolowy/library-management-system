@@ -2,15 +2,15 @@
 
 public abstract class User : ICsvConvertible
 {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Pesel { get; set; }
+    public string FirstName { get; }
+    public string LastName { get; }
+    public string Pesel { get; }
 
     protected User(string firstName, string lastName, string pesel)
     {
-        this.FirstName = firstName;
-        this.LastName = lastName;
-        this.Pesel = pesel;
+        FirstName = firstName;
+        LastName = lastName;
+        Pesel = pesel;
     }
 
     protected bool Equals(User other)
