@@ -4,7 +4,7 @@ public class LibraryUser : User
 {
     private readonly List<Publication> _publicationHistory = new();
     private readonly List<Publication> _borrowedPublications = new();
-    
+
     public LibraryUser(string firstName, string lastName, string pesel) : base(firstName, lastName, pesel)
     {
     }

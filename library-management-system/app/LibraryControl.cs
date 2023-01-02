@@ -232,9 +232,15 @@ class LibraryControl
     {
         [Description("wyjście z programu")] Exit = 0,
         [Description("dodanie nowej książki")] AddBook = 1,
-        [Description("dodanie nowego magazynu")] AddMagazine = 2,
-        [Description("wyświetl dostępne książki")] PrintBooks = 3,
-        [Description("wyświetl dostępne magazyny")] PrintMagazines = 4,
+
+        [Description("dodanie nowego magazynu")]
+        AddMagazine = 2,
+
+        [Description("wyświetl dostępne książki")]
+        PrintBooks = 3,
+
+        [Description("wyświetl dostępne magazyny")]
+        PrintMagazines = 4,
         [Description("Usuń książkę")] DeleteBook = 5,
         [Description("Usuń magazyn")] DeleteMagazine = 6,
         [Description("Dodaj czytelnika")] AddUser = 7,

@@ -135,7 +135,7 @@ public class CsvFileManager : IFileManager
         ExportToCsv(publications, FileName);
     }
 
-    private static void ExportToCsv<T>(ICollection<T> collection, string fileName) where T : ICsvConvertible
+    private static void ExportToCsv<T>(IEnumerable<T> collection, string fileName) where T : ICsvConvertible
     {
         try
         {

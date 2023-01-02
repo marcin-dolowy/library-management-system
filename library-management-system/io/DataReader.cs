@@ -84,7 +84,7 @@ public class DataReader
 
         return true;
     }
-    
+
     public bool ContainsOnlyDigits(string input)
     {
         return Regex.IsMatch(input, @"^\d+$");

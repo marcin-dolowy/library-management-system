@@ -14,7 +14,7 @@ public class Book : Publication
         Pages = pages;
         Isbn = isbn;
     }
-    
+
     public override string ToString()
     {
         return base.ToString() + "; " + Author + "; " + Pages + "; " + Isbn;
