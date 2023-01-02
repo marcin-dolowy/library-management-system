@@ -25,11 +25,6 @@ public class Library
         return list;
     }
 
-    // public Publication findPublicationByTitle(String title)
-    // {
-    //     return publications[title];
-    // }
-
     public ICollection<LibraryUser> getSortedUsers(IComparer<LibraryUser> comparator)
     {
         List<LibraryUser> list = new List<LibraryUser>(users.Values);

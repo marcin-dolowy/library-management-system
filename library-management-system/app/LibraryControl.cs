@@ -85,16 +85,6 @@ class LibraryControl
         String title = dataReader.GetString();
         String notFoundMessage = "Brak publikacji o takim tytule";
 
-        // Publication publication = library.findPublicationByTitle(title);
-        // if (publication != null)
-        // {
-        //     printer.PrintLine(publication.ToString());
-        // }
-        // else
-        // {
-        //     printer.PrintLine(notFoundMessage);
-        // }
-
         if (library.Publications.ContainsKey(title))
         {
             printer.PrintLine(library.Publications[title].ToString());
