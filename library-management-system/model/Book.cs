@@ -2,50 +2,50 @@
 
 public class Book : Publication
 {
-    public static string TYPE = "Książka";
-    public string author { get; set; }
-    public int pages { get; set; }
-    public string isbn { get; set; }
+    public const string Type = "Książka";
+    private string Author { get; }
+    private int Pages { get; }
+    private string Isbn { get; }
 
     public Book(string title, string author, int year, int pages, string publisher, string isbn) : base(year, title,
         publisher)
     {
-        this.author = author;
-        this.pages = pages;
-        this.isbn = isbn;
+        Author = author;
+        Pages = pages;
+        Isbn = isbn;
     }
-
+    
     public override string ToString()
     {
-        return base.ToString() + "; " + author + "; " + pages + "; " + isbn;
+        return base.ToString() + "; " + Author + "; " + Pages + "; " + Isbn;
     }
 
     public override string toCsv()
     {
-        return TYPE + ";" +
+        return Type + ";" +
                Title + ";" +
                Publisher + ";" +
                Year + ";" +
-               author + ";" +
-               pages + ";" +
-               isbn;
+               Author + ";" +
+               Pages + ";" +
+               Isbn;
     }
 
-    protected bool Equals(Book other)
+    private bool Equals(Book other)
     {
-        return base.Equals(other) && author == other.author && pages == other.pages && isbn == other.isbn;
+        return base.Equals(other) && Author == other.Author && Pages == other.Pages && Isbn == other.Isbn;
     }
 
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((Book)obj);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(base.GetHashCode(), author, pages, isbn);
+        return HashCode.Combine(base.GetHashCode(), Author, Pages, Isbn);
     }
 }

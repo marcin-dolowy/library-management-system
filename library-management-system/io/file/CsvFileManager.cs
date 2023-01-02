@@ -78,7 +78,7 @@ public class CsvFileManager : FileManager
     {
         string[] split = line.Split(";");
         string type = split[0];
-        if (Book.TYPE.Equals(type))
+        if (Book.Type.Equals(type))
         {
             return createBook(split);
         }
