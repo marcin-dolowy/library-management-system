@@ -79,7 +79,7 @@ class LibraryControl
         } while (option != (int) Option.EXIT);
     }
 
-    private void findBook() // DONE
+    private void findBook()
     {
         printer.PrintLine("Podaj tytuł publikacji:");
         String title = dataReader.GetString();
