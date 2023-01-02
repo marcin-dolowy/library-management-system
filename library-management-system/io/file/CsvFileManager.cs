@@ -28,24 +28,16 @@ public class CsvFileManager : IFileManager
     {
         try
         {
-            using (FileReader reader = new FileReader(FileName))
+            using FileReader reader = new FileReader(FileName);
+            while (true)
             {
-                while (true)
+                string? line = await reader.ReadLine();
+                if (line == null)
                 {
-                    string? line = await reader.ReadLine();
-                    if (line == null)
-                    {
-                        break;
-                    }
-                    var publication = CreateObjectFromString(line);
-                    library.AddPublication(publication);
+                    break;
                 }
-                // string line;
-                // while ((line = reader.ReadLine()) != null)
-                // {
-                //     var publication = CreateObjectFromString(line);
-                //     library.AddPublication(publication);
-                // }
+                var publication = CreateObjectFromString(line);
+                library.AddPublication(publication);
             }
         }
         catch (FileNotFoundException)
@@ -62,24 +54,16 @@ public class CsvFileManager : IFileManager
     {
         try
         {
-            using (FileReader reader = new FileReader(UsersFileName))
+            using FileReader reader = new FileReader(UsersFileName);
+            while (true)
             {
-                while (true)
+                string? line = await reader.ReadLine();
+                if (line == null)
                 {
-                    string? line = await reader.ReadLine();
-                    if (line == null)
-                    {
-                        break;
-                    }
-                    var user = CreateUserFromString(line);
-                    library.AddUser(user);
+                    break;
                 }
-                // string line;
-                // while ((line = reader.ReadLine()) != null)
-                // {
-                //     var user = CreateUserFromString(line);
-                //     library.AddUser(user);
-                // }
+                var user = CreateUserFromString(line);
+                library.AddUser(user);
             }
         }
         catch (FileNotFoundException)
