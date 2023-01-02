@@ -1,4 +1,6 @@
+using System.Text.RegularExpressions;
 using library_management_system.model;
+using InvalidDataException = library_management_system.Exception.InvalidDataException;
 
 namespace library_management_system.io;
 
@@ -6,11 +8,13 @@ public class DataReader
 {
     private readonly ConsolePrinter _printer;
 
-    public DataReader(ConsolePrinter printer) {
+    public DataReader(ConsolePrinter printer)
+    {
         this._printer = printer;
     }
 
-    public Book ReadAndCreateBook() {
+    public Book ReadAndCreateBook()
+    {
         _printer.PrintLine("Tytuł:");
         string title = Console.ReadLine();
         _printer.PrintLine("Autor:");
@@ -19,6 +23,8 @@ public class DataReader
         string publisher = Console.ReadLine();
         _printer.PrintLine("ISBN:");
         string isbn = Console.ReadLine();
+        if (!IsValidIsbn(isbn))
+            throw new InvalidDataException();
         _printer.PrintLine("Rok wydania:");
         int releaseDate = int.Parse(Console.ReadLine());
         _printer.PrintLine("Liczba stron:");
@@ -26,7 +32,8 @@ public class DataReader
         return new Book(title, author, releaseDate, pages, publisher, isbn);
     }
 
-    public Magazine ReadAndCreateMagazine() {
+    public Magazine ReadAndCreateMagazine()
+    {
         _printer.PrintLine("Tytuł:");
         string title = Console.ReadLine();
         _printer.PrintLine("Wydawnictwo:");
@@ -42,7 +49,8 @@ public class DataReader
         return new Magazine(title, publisher, language, year, month, day);
     }
 
-    public LibraryUser CreateLibraryUser() {
+    public LibraryUser CreateLibraryUser()
+    {
         _printer.PrintLine("Imię");
         string firstName = Console.ReadLine();
         _printer.PrintLine("Nazwisko");
@@ -51,12 +59,34 @@ public class DataReader
         string pesel = Console.ReadLine();
         return new LibraryUser(firstName, lastName, pesel);
     }
-    
-    public string GetString() {
+
+    public string GetString()
+    {
         return Console.ReadLine();
     }
-    
-    public int GetInt() {
+
+    public int GetInt()
+    {
         return int.Parse(Console.ReadLine());
+    }
+
+    private static bool IsValidIsbn(string isbn)
+    {
+        if (isbn.Length != 10 && isbn.Length != 13)
+        {
+            return false;
+        }
+
+        if (!Regex.IsMatch(isbn, @"^\d{9}[\d|X]$|^\d{12}[\d|X]$"))
+        {
+            return false;
+        }
+
+        return true;
+    }
+    
+    public bool ContainsOnlyDigits(string input)
+    {
+        return Regex.IsMatch(input, @"^\d+$");
     }
 }
