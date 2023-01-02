@@ -7,7 +7,7 @@ using InvalidDataException = System.IO.InvalidDataException;
 
 namespace library_management_system.app;
 
-class LibraryControl
+public class LibraryControl
 {
     private readonly ConsolePrinter _printer = new();
     private readonly DataReader _dataReader;
