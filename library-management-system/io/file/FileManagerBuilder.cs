@@ -31,7 +31,6 @@ public class FileManagerBuilder
         do
         {
             PrintTypes();
-            //serial, SERIAL
             String type = _reader.GetString();
             if (string.Equals(type, "CSV", StringComparison.OrdinalIgnoreCase))
             {

@@ -24,15 +24,28 @@ public class CsvFileManager : IFileManager
         return library;
     }
 
-    private static void ImportPublications(Library library)
+    private static async void ImportPublications(Library library)
     {
         try
         {
-            string[] lines = File.ReadAllLines(FileName);
-            foreach (string line in lines)
+            using (FileReader reader = new FileReader(FileName))
             {
-                var publication = CreateObjectFromString(line);
-                library.AddPublication(publication);
+                while (true)
+                {
+                    string? line = await reader.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+                    var publication = CreateObjectFromString(line);
+                    library.AddPublication(publication);
+                }
+                // string line;
+                // while ((line = reader.ReadLine()) != null)
+                // {
+                //     var publication = CreateObjectFromString(line);
+                //     library.AddPublication(publication);
+                // }
             }
         }
         catch (FileNotFoundException)
@@ -45,15 +58,28 @@ public class CsvFileManager : IFileManager
         }
     }
 
-    private static void ImportUsers(Library library)
+    private static async void ImportUsers(Library library)
     {
         try
         {
-            string[] lines = File.ReadAllLines(UsersFileName);
-            foreach (string line in lines)
+            using (FileReader reader = new FileReader(UsersFileName))
             {
-                var user = CreateUserFromString(line);
-                library.AddUser(user);
+                while (true)
+                {
+                    string? line = await reader.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+                    var user = CreateUserFromString(line);
+                    library.AddUser(user);
+                }
+                // string line;
+                // while ((line = reader.ReadLine()) != null)
+                // {
+                //     var user = CreateUserFromString(line);
+                //     library.AddUser(user);
+                // }
             }
         }
         catch (FileNotFoundException)
@@ -125,7 +151,7 @@ public class CsvFileManager : IFileManager
         ExportToCsv(publications, FileName);
     }
 
-    private static void ExportToCsv<T>(IEnumerable<T> collection, string fileName) where T : ICsvConvertible
+    private static void ExportToCsv<T>(ICollection<T> collection, string fileName) where T : ICsvConvertible
     {
         try
         {
