@@ -82,7 +82,7 @@ public class CsvFileManager : FileManager
         {
             return createBook(split);
         }
-        else if (Magazine.TYPE.Equals(type))
+        else if (Magazine.Type.Equals(type))
         {
             return createMagazine(split);
         }

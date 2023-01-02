@@ -2,38 +2,38 @@
 
 public class Magazine : Publication
 {
-    public const string TYPE = "Magazyn";
-    private int month { get; set; }
-    private int day { get; set; }
-    private string language { get; set; }
+    public const string Type = "Magazyn";
+    private int Month { get; }
+    private int Day { get; }
+    private string Language { get; }
 
     public Magazine(string title, string publisher, string language, int year, int month, int day) : base(year, title,
         publisher)
     {
-        this.month = month;
-        this.day = day;
-        this.language = language;
+        Month = month;
+        Day = day;
+        Language = language;
     }
 
     public override string ToCsv()
     {
-        return TYPE + ";" +
+        return Type + ";" +
                Title + ";" +
                Publisher + ";" +
                Year + ";" +
-               month + ";" +
-               day + ";" +
-               language;
+               Month + ";" +
+               Day + ";" +
+               Language;
     }
 
     public override string ToString()
     {
-        return base.ToString() + "; " + month + "; " + day + "; " + language;
+        return base.ToString() + "; " + Month + "; " + Day + "; " + Language;
     }
 
     protected bool Equals(Magazine other)
     {
-        return base.Equals(other) && month == other.month && day == other.day && language == other.language;
+        return base.Equals(other) && Month == other.Month && Day == other.Day && Language == other.Language;
     }
 
     public override bool Equals(object? obj)
@@ -46,6 +46,6 @@ public class Magazine : Publication
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(base.GetHashCode(), month, day, language);
+        return HashCode.Combine(base.GetHashCode(), Month, Day, Language);
     }
 }
