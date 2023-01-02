@@ -38,22 +38,22 @@ public class Library
     }
     
     public void addPublication (Publication publication) {
-        if (publications.ContainsKey(publication.title)) {
-            throw new PublicationAlreadyExistsException("Publikacja o takim tytule już istnieje " + publication.title);
+        if (publications.ContainsKey(publication.Title)) {
+            throw new PublicationAlreadyExistsException("Publikacja o takim tytule już istnieje " + publication.Title);
         }
-        publications.Add(publication.title, publication);
+        publications.Add(publication.Title, publication);
     }
 
     public void addUser(LibraryUser user) {
-        if (users.ContainsKey(user.pesel)) {
-            throw new UserAlreadyExistsException("Użytkownik ze wskazanym peselem już istnieje " + user.pesel);
+        if (users.ContainsKey(user.Pesel)) {
+            throw new UserAlreadyExistsException("Użytkownik ze wskazanym peselem już istnieje " + user.Pesel);
         }
-        users.Add(user.pesel, user);
+        users.Add(user.Pesel, user);
     }
     
     public bool removePublication(Publication pub) {
         if (publications.ContainsValue(pub)) {
-            publications.Remove(pub.title);
+            publications.Remove(pub.Title);
             return true;
         } else {
             return false;

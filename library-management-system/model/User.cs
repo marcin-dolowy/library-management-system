@@ -2,20 +2,20 @@
 
 public abstract class User : CsvConvertible
 {
-    public string firstName { get; set; }
-    public string lastName { get; set; }
-    public string pesel { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Pesel { get; set; }
 
     protected User(string firstName, string lastName, string pesel)
     {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.pesel = pesel;
+        this.FirstName = firstName;
+        this.LastName = lastName;
+        this.Pesel = pesel;
     }
 
     protected bool Equals(User other)
     {
-        return firstName == other.firstName && lastName == other.lastName && pesel == other.pesel;
+        return FirstName == other.FirstName && LastName == other.LastName && Pesel == other.Pesel;
     }
 
     public override bool Equals(object? obj)
@@ -28,12 +28,12 @@ public abstract class User : CsvConvertible
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(firstName, lastName, pesel);
+        return HashCode.Combine(FirstName, LastName, Pesel);
     }
 
     public override string ToString()
     {
-        return firstName + " " + lastName + " " + pesel;
+        return FirstName + " " + LastName + " " + Pesel;
     }
 
     public abstract string toCsv();

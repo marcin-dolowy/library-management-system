@@ -2,32 +2,32 @@
 
 public abstract class Publication : CsvConvertible, IComparable<Publication>
 {
-    public int year { get; set; }
-    public string title { get; set; }
-    public string publisher { get; set; }
+    public int Year { get; set; }
+    public string Title { get; set; }
+    public string Publisher { get; set; }
 
     protected Publication(int year, string title, string publisher)
     {
-        this.year = year;
-        this.title = title;
-        this.publisher = publisher;
+        this.Year = year;
+        this.Title = title;
+        this.Publisher = publisher;
     }
 
     public override string ToString()
     {
-        return title + "; " + publisher + "; " + year;
+        return Title + "; " + Publisher + "; " + Year;
     }
 
     public abstract string toCsv();
 
     protected bool Equals(Publication other)
     {
-        return year == other.year && title == other.title && publisher == other.publisher;
+        return Year == other.Year && Title == other.Title && Publisher == other.Publisher;
     }
 
     public int CompareTo(Publication? other)
     {
-        if (string.Equals(title, other.title, StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(Title, other.Title, StringComparison.OrdinalIgnoreCase))
         {
             return 1;
         }
@@ -47,6 +47,6 @@ public abstract class Publication : CsvConvertible, IComparable<Publication>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(year, title, publisher);
+        return HashCode.Combine(Year, Title, Publisher);
     }
 }
