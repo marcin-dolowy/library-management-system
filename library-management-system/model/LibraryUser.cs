@@ -1,37 +1,41 @@
-﻿using System.Collections;
-
-namespace library_management_system.model;
+﻿namespace library_management_system.model;
 
 public class LibraryUser : User
 {
-    private List<Publication> publicationHistory = new List<Publication>();
-    private List<Publication> borrowedPublications = new List<Publication>();
-
+    private readonly List<Publication> _publicationHistory = new();
+    private readonly List<Publication> _borrowedPublications = new();
+    
     public LibraryUser(string firstName, string lastName, string pesel) : base(firstName, lastName, pesel)
     {
     }
-    
-    public void addPublicationToHistory(Publication pub) {
-        publicationHistory.Add(pub);
+
+    public void AddPublicationToHistory(Publication pub)
+    {
+        _publicationHistory.Add(pub);
     }
 
-    public void borrowPublication(Publication pub) {
-        borrowedPublications.Add(pub);
+    public void BorrowPublication(Publication pub)
+    {
+        _borrowedPublications.Add(pub);
     }
 
-    public bool returnPublication(Publication pub) {
+    public bool ReturnPublication(Publication pub)
+    {
         bool result = false;
-        if (borrowedPublications.Contains(pub)) {
-            borrowedPublications.Remove(pub);
-            addPublicationToHistory(pub);
+        if (_borrowedPublications.Contains(pub))
+        {
+            _borrowedPublications.Remove(pub);
+            AddPublicationToHistory(pub);
             result = true;
         }
+
         return result;
     }
 
-    protected bool Equals(LibraryUser other)
+    private bool Equals(LibraryUser other)
     {
-        return base.Equals(other) && publicationHistory.Equals(other.publicationHistory) && borrowedPublications.Equals(other.borrowedPublications);
+        return base.Equals(other) && _publicationHistory.Equals(other._publicationHistory) &&
+               _borrowedPublications.Equals(other._borrowedPublications);
     }
 
     public override bool Equals(object? obj)
@@ -44,7 +48,7 @@ public class LibraryUser : User
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(base.GetHashCode(), publicationHistory, borrowedPublications);
+        return HashCode.Combine(base.GetHashCode(), _publicationHistory, _borrowedPublications);
     }
 
     public override string ToCsv()
