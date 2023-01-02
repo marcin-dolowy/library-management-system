@@ -2,33 +2,37 @@ using library_management_system.Exception;
 
 namespace library_management_system.io.file;
 
-public class FileManagerBuilder {
-    private ConsolePrinter printer;
-    private DataReader reader;
+public class FileManagerBuilder
+{
+    private readonly ConsolePrinter _printer;
+    private readonly DataReader _reader;
 
-    public FileManagerBuilder(ConsolePrinter printer, DataReader reader) {
-        this.printer = printer;
-        this.reader = reader;
+    public FileManagerBuilder(ConsolePrinter printer, DataReader reader)
+    {
+        _printer = printer;
+        _reader = reader;
     }
 
-    public IFileManager build() {
-        printer.PrintLine("Wybierz format danych:");
-        FileType fileType = getFileType();
-        switch (fileType) {
-            case FileType.CSV:
-                return new CsvFileManager();
-            default:
-                throw new NoSuchFileTypeException("Nieobsługiwany typ danych");
-        }
+    public IFileManager Build()
+    {
+        _printer.PrintLine("Wybierz format danych:");
+        FileType fileType = GetFileType();
+        return fileType switch
+        {
+            FileType.CSV => new CsvFileManager(),
+            _ => throw new NoSuchFileTypeException("Nieobsługiwany typ danych")
+        };
     }
 
-    private FileType getFileType() {
+    private FileType GetFileType()
+    {
         bool typeOk = false;
         FileType result = FileType.CSV;
-        do {
-            printTypes();
+        do
+        {
+            PrintTypes();
             //serial, SERIAL
-            String type = reader.GetString();
+            String type = _reader.GetString();
             if (string.Equals(type, "CSV", StringComparison.OrdinalIgnoreCase))
             {
                 result = FileType.CSV;
@@ -36,16 +40,18 @@ public class FileManagerBuilder {
             }
             else
             {
-                printer.PrintLine("Nieobsługiwany typ danych, wybierz ponownie.");
+                _printer.PrintLine("Nieobsługiwany typ danych, wybierz ponownie.");
             }
         } while (!typeOk);
+
         return result;
     }
 
-    private void printTypes() {
+    private void PrintTypes()
+    {
         foreach (FileType value in Enum.GetValues(typeof(FileType)))
         {
-            printer.PrintLine(value.ToString());
+            _printer.PrintLine(value.ToString());
         }
     }
 }

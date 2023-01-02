@@ -19,7 +19,7 @@ class LibraryControl
     public LibraryControl()
     {
         dataReader = new DataReader(printer);
-        fileManager = new FileManagerBuilder(printer, dataReader).build();
+        fileManager = new FileManagerBuilder(printer, dataReader).Build();
         try
         {
             library = fileManager.ImportData();
