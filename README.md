@@ -1,2 +1,6 @@
 # library-management-system
-# .net project together
+# .NET Project together
+
+Contributors:
+Marcin Dołowy
+Hubert Filipczuk
