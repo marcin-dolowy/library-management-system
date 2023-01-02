@@ -1,4 +1,5 @@
-﻿using library_management_system.Exception;
+﻿using System.Security.Cryptography;
+using library_management_system.Exception;
 using library_management_system.io;
 using library_management_system.io.file;
 using library_management_system.model;
@@ -23,8 +24,7 @@ class LibraryControl
             library = fileManager.importData();
             printer.PrintLine("Zaimportowano dane z pliku");
         }
-        catch (System.Exception e) when (e is DataImportException ||
-                                         e is InvalidDataException)
+        catch (System.Exception e) when (e is DataImportException or InvalidDataException)
         {
             printer.PrintLine(e.Message);
             printer.PrintLine("Zainicjowano nową bazę.");
@@ -78,22 +78,49 @@ class LibraryControl
         } while (option != 9);
     }
 
-    private void findBook()
+    private void findBook() // DONE
     {
         printer.PrintLine("Podaj tytuł publikacji:");
         String title = dataReader.GetString();
         String notFoundMessage = "Brak publikacji o takim tytule";
+
+        // Publication publication = library.findPublicationByTitle(title);
+        // if (publication != null)
+        // {
+        //     printer.PrintLine(publication.ToString());
+        // }
+        // else
+        // {
+        //     printer.PrintLine(notFoundMessage);
+        // }
+
+        if (library.Publications.ContainsKey(title))
+        {
+            printer.PrintLine(library.Publications[title].ToString());
+        }
+        else
+        {
+            printer.PrintLine(notFoundMessage);
+        }
+
         // library.findPublicationByTitle(title)
         //     .map(Publication::toString)
         //     .ifPresentOrElse(System.out::println, () -> System.out.println(notFoundMessage));
     }
 
-    private void printUsers()
+    private void printUsers() // NIE WIEM JAK TO ZROBIC
     {
-//         printer.printUsers(library.getSortedUsers(
-// //                (p1, p2) -> p1.getLastName().compareToIgnoreCase(p2.getLastName())
-//             Comparator.comparing(User::getLastName, String.CASE_INSENSITIVE_ORDER)
-//         ));
+        // printer.printUsers(library.getSortedUsers(
+        //         (p1, p2) -> p1.getLastName().compareToIgnoreCase(p2.getLastName())
+        //     Comparator.comparing(User::getLastName, String.CASE_INSENSITIVE_ORDER)
+        // ));
+
+        // printer.PrintUsers(library.getSortedUsers((p1, p2) => p1.LastName.CompareTo
+        // (p2.LastName, StringComparison.OrdinalIgnoreCase)));
+        
+        //DO SPRAWDZENIA!!!!!!!!!!
+        printer.PrintUsers(library.getSortedUsers(Comparer<LibraryUser>.Create((x, y) =>
+            StringComparer.OrdinalIgnoreCase.Compare(x.LastName, y.LastName))));
     }
 
     private void addUser()
@@ -135,6 +162,16 @@ class LibraryControl
 // //                (p1, p2) -> p1.getTitle().compareToIgnoreCase(p2.getTitle())
 //             IComparator.comparing(Publication::getTitle, String.CASE_INSENSITIVE_ORDER)
 //         ));
+
+
+        //??????????????
+        // printer.PrintUsers(library.getSortedUsers(
+        //     (x, y) => string.Compare(x.LastName, y.LastName, StringComparison.OrdinalIgnoreCase)
+        // ));
+
+        // DO SPRAWDZENIA!!!!!!!!!
+        printer.PrintMagazines(library.getSortedPublications(Comparer<Publication>.Create((x, y) =>
+            StringComparer.OrdinalIgnoreCase.Compare(x.Title, y.Title))));
     }
 
     private void addMagazine()
@@ -187,6 +224,11 @@ class LibraryControl
 // //                (p1, p2) -> p1.getTitle().compareToIgnoreCase(p2.getTitle())
 //             Comparator.comparing(Publication::getTitle, String.CASE_INSENSITIVE_ORDER)
 //         ));
+
+
+        // DO SPRAWDZENIA!!!!!!!!!
+        printer.PrintBooks(library.getSortedPublications(Comparer<Publication>.Create((x, y) =>
+            StringComparer.OrdinalIgnoreCase.Compare(x.Title, y.Title))));
     }
 
     private void addBook()
