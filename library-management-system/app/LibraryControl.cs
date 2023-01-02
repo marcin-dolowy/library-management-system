@@ -102,7 +102,7 @@ class LibraryControl
 
     private void AddUser()
     {
-        LibraryUser libraryUser = _dataReader.createLibraryUser();
+        LibraryUser libraryUser = _dataReader.CreateLibraryUser();
         try
         {
             _library.AddUser(libraryUser);
@@ -143,7 +143,7 @@ class LibraryControl
     {
         try
         {
-            Magazine magazine = _dataReader.readAndCreateMagazine();
+            Magazine magazine = _dataReader.ReadAndCreateMagazine();
             _library.AddPublication(magazine);
         }
         catch (System.Exception)
@@ -156,7 +156,7 @@ class LibraryControl
     {
         try
         {
-            Magazine magazine = _dataReader.readAndCreateMagazine();
+            Magazine magazine = _dataReader.ReadAndCreateMagazine();
             _printer.PrintLine(_library.RemovePublication(magazine) ? "Usunięto magazyn" : "Brak wskazanego magazynu");
         }
         catch (System.Exception)
@@ -190,7 +190,7 @@ class LibraryControl
     {
         try
         {
-            Book book = _dataReader.readAndCreateBook();
+            Book book = _dataReader.ReadAndCreateBook();
             _library.AddPublication(book);
         }
         catch (System.Exception)
@@ -203,7 +203,7 @@ class LibraryControl
     {
         try
         {
-            Book book = _dataReader.readAndCreateBook();
+            Book book = _dataReader.ReadAndCreateBook();
             _printer.PrintLine(_library.RemovePublication(book) ? "Usunięto książkę" : "Brak wskazanej książki");
         }
         catch (System.Exception)

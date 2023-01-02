@@ -6,14 +6,14 @@ namespace library_management_system.io;
 
 public class DataReader
 {
-    private ConsolePrinter _printer;
+    private readonly ConsolePrinter _printer;
 
     public DataReader(ConsolePrinter printer)
     {
         this._printer = printer;
     }
 
-    public Book readAndCreateBook()
+    public Book ReadAndCreateBook()
     {
         _printer.PrintLine("Tytuł:");
         string title = Console.ReadLine();
@@ -32,7 +32,7 @@ public class DataReader
         return new Book(title, author, releaseDate, pages, publisher, isbn);
     }
 
-    public Magazine readAndCreateMagazine()
+    public Magazine ReadAndCreateMagazine()
     {
         _printer.PrintLine("Tytuł:");
         string title = Console.ReadLine();
@@ -49,7 +49,7 @@ public class DataReader
         return new Magazine(title, publisher, language, year, month, day);
     }
 
-    public LibraryUser createLibraryUser()
+    public LibraryUser CreateLibraryUser()
     {
         _printer.PrintLine("Imię");
         string firstName = Console.ReadLine();
@@ -60,7 +60,7 @@ public class DataReader
         return new LibraryUser(firstName, lastName, pesel);
     }
 
-    public String GetString()
+    public string GetString()
     {
         return Console.ReadLine();
     }
