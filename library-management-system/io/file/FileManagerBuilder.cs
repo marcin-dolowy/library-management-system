@@ -29,7 +29,7 @@ public class FileManagerBuilder {
             printTypes();
             //serial, SERIAL
             String type = reader.GetString();
-            if (type.Equals("CSV"))
+            if (string.Equals(type, "CSV", StringComparison.OrdinalIgnoreCase))
             {
                 result = FileType.CSV;
                 typeOk = true;

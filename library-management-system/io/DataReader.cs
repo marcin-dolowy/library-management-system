@@ -55,4 +55,8 @@ public class DataReader
     public String GetString() {
         return Console.ReadLine();
     }
+    
+    public int GetInt() {
+        return int.Parse(Console.ReadLine());
+    }
 }

@@ -49,6 +49,6 @@ public class LibraryUser : User
 
     public override string toCsv()
     {
-        return firstName + ";" + lastName + ";" + pesel;
+        return FirstName + ";" + LastName + ";" + Pesel;
     }
 }

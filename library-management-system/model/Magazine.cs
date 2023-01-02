@@ -18,9 +18,9 @@ public class Magazine : Publication
     public override string toCsv()
     {
         return TYPE + ";" +
-               title + ";" +
-               publisher + ";" +
-               year + ";" +
+               Title + ";" +
+               Publisher + ";" +
+               Year + ";" +
                month + ";" +
                day + ";" +
                language;

@@ -23,9 +23,9 @@ public class Book : Publication
     public override string toCsv()
     {
         return TYPE + ";" +
-               title + ";" +
-               publisher + ";" +
-               year + ";" +
+               Title + ";" +
+               Publisher + ";" +
+               Year + ";" +
                author + ";" +
                pages + ";" +
                isbn;
