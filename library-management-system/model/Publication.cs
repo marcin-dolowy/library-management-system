@@ -2,15 +2,15 @@
 
 public abstract class Publication : ICsvConvertible, IComparable<Publication>
 {
-    public int Year { get; set; }
-    public string Title { get; set; }
-    public string Publisher { get; set; }
+    protected int Year { get; }
+    public string Title { get; }
+    protected string Publisher { get; }
 
     protected Publication(int year, string title, string publisher)
     {
-        this.Year = year;
-        this.Title = title;
-        this.Publisher = publisher;
+        Year = year;
+        Title = title;
+        Publisher = publisher;
     }
 
     public override string ToString()
@@ -27,7 +27,7 @@ public abstract class Publication : ICsvConvertible, IComparable<Publication>
 
     public int CompareTo(Publication? other)
     {
-        if (string.Equals(Title, other.Title, StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(Title, other?.Title, StringComparison.OrdinalIgnoreCase))
         {
             return 1;
         }
@@ -41,7 +41,7 @@ public abstract class Publication : ICsvConvertible, IComparable<Publication>
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((Publication)obj);
     }
 
