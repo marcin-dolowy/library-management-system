@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Security.Cryptography;
 using library_management_system.Exception;
 using library_management_system.io;
 using library_management_system.io.file;
@@ -10,111 +9,111 @@ namespace library_management_system.app;
 
 class LibraryControl
 {
-    private ConsolePrinter printer = new ConsolePrinter();
-    private DataReader dataReader;
-    private IFileManager fileManager;
+    private readonly ConsolePrinter _printer = new();
+    private readonly DataReader _dataReader;
+    private readonly IFileManager _fileManager;
 
-    private Library library;
+    private readonly Library _library;
 
     public LibraryControl()
     {
-        dataReader = new DataReader(printer);
-        fileManager = new FileManagerBuilder(printer, dataReader).Build();
+        _dataReader = new DataReader(_printer);
+        _fileManager = new FileManagerBuilder(_printer, _dataReader).Build();
         try
         {
-            library = fileManager.ImportData();
-            printer.PrintLine("Zaimportowano dane z pliku");
+            _library = _fileManager.ImportData();
+            _printer.PrintLine("Zaimportowano dane z pliku");
         }
         catch (System.Exception e) when (e is DataImportException or InvalidDataException)
         {
-            printer.PrintLine(e.Message);
-            printer.PrintLine("Zainicjowano nową bazę.");
-            library = new Library();
+            _printer.PrintLine(e.Message);
+            _printer.PrintLine("Zainicjowano nową bazę.");
+            _library = new Library();
         }
     }
 
-    public void controlLoop()
+    public void ControlLoop()
     {
         int option;
         do
         {
-            printOptions();
-            option = getOption();
+            PrintOptions();
+            option = GetOption();
             switch (option)
             {
-                case (int) Option.ADD_BOOK:
-                    addBook();
+                case (int)Option.AddBook:
+                    AddBook();
                     break;
-                case (int) Option.ADD_MAGAZINE:
-                    addMagazine();
+                case (int)Option.AddMagazine:
+                    AddMagazine();
                     break;
-                case (int) Option.PRINT_BOOKS:
-                    printBooks();
+                case (int)Option.PrintBooks:
+                    PrintBooks();
                     break;
-                case (int) Option.PRINT_MAGAZINES:
-                    printMagazines();
+                case (int)Option.PrintMagazines:
+                    PrintMagazines();
                     break;
-                case (int) Option.DELETE_BOOK:
-                    deleteBook();
+                case (int)Option.DeleteBook:
+                    DeleteBook();
                     break;
-                case (int) Option.DELETE_MAGAZINE:
-                    deleteMagazine();
+                case (int)Option.DeleteMagazine:
+                    DeleteMagazine();
                     break;
-                case (int) Option.ADD_USER:
-                    addUser();
+                case (int)Option.AddUser:
+                    AddUser();
                     break;
-                case (int) Option.PRINT_USERS:
-                    printUsers();
+                case (int)Option.PrintUsers:
+                    PrintUsers();
                     break;
-                case (int) Option.FIND_BOOK:
-                    findBook();
+                case (int)Option.FindBook:
+                    FindBook();
                     break;
-                case (int) Option.EXIT:
-                    exit();
+                case (int)Option.Exit:
+                    Exit();
                     break;
                 default:
-                    printer.PrintLine("Brak takiej opcji. Wybierz poprawną.");
+                    _printer.PrintLine("Brak takiej opcji. Wybierz poprawną.");
                     break;
             }
-        } while (option != (int) Option.EXIT);
+        } while (option != (int)Option.Exit);
     }
 
-    private void findBook()
+    private void FindBook()
     {
-        printer.PrintLine("Podaj tytuł publikacji:");
-        String title = dataReader.GetString();
+        _printer.PrintLine("Podaj tytuł publikacji:");
+        String title = _dataReader.GetString();
         String notFoundMessage = "Brak publikacji o takim tytule";
 
-        if (library.Publications.ContainsKey(title))
+        if (_library.Publications.ContainsKey(title))
         {
-            printer.PrintLine(library.Publications[title].ToString());
+            _printer.PrintLine(_library.Publications[title].ToString());
         }
         else
         {
-            printer.PrintLine(notFoundMessage);
+            _printer.PrintLine(notFoundMessage);
         }
     }
 
-    private void printUsers()
+    private void PrintUsers()
     {
-        printer.PrintUsers(library.GetSortedUsers(Comparer<LibraryUser>.Create((x, y) =>
+        _printer.PrintUsers(_library.GetSortedUsers(Comparer<LibraryUser>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.LastName, y.LastName))));
     }
 
-    private void addUser()
+    private void AddUser()
     {
-        LibraryUser libraryUser = dataReader.createLibraryUser();
+        LibraryUser libraryUser = _dataReader.createLibraryUser();
         try
         {
-            library.AddUser(libraryUser);
+            _library.AddUser(libraryUser);
         }
         catch (UserAlreadyExistsException e)
         {
-            printer.PrintLine(e.Message);
+            _printer.PrintLine(e.Message);
         }
     }
 
-    private int getOption()
+    private int GetOption()
     {
         bool optionOk = false;
         int option = -1;
@@ -122,141 +121,124 @@ class LibraryControl
         {
             try
             {
-                option = dataReader.GetInt();
+                option = _dataReader.GetInt();
                 optionOk = true;
             }
-            catch (NoSuchOptionException e)
+            catch (NoSuchOptionException)
             {
-                printer.PrintLine("Wprowadzono błędną wartość, podaj ponownie:");
+                _printer.PrintLine("Wprowadzono błędną wartość, podaj ponownie:");
             }
         }
 
         return option;
     }
 
-    private void printMagazines()
+    private void PrintMagazines()
     {
-        printer.PrintMagazines(library.GetSortedPublications(Comparer<Publication>.Create((x, y) =>
+        _printer.PrintMagazines(_library.GetSortedPublications(Comparer<Publication>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.Title, y.Title))));
     }
 
-    private void addMagazine()
+    private void AddMagazine()
     {
         try
         {
-            Magazine magazine = dataReader.readAndCreateMagazine();
-            library.AddPublication(magazine);
+            Magazine magazine = _dataReader.readAndCreateMagazine();
+            _library.AddPublication(magazine);
         }
-        catch (System.Exception e)
+        catch (System.Exception)
         {
-            printer.PrintLine("Nie udało się utworzyć magazynu, niepoprawne dane.");
+            _printer.PrintLine("Nie udało się utworzyć magazynu, niepoprawne dane.");
         }
     }
 
-    private void deleteMagazine()
+    private void DeleteMagazine()
     {
         try
         {
-            Magazine magazine = dataReader.readAndCreateMagazine();
-            if (library.RemovePublication(magazine))
-                printer.PrintLine("Usunięto magazyn");
-            else
-                printer.PrintLine("Brak wskazanego magazynu");
+            Magazine magazine = _dataReader.readAndCreateMagazine();
+            _printer.PrintLine(_library.RemovePublication(magazine) ? "Usunięto magazyn" : "Brak wskazanego magazynu");
         }
-        catch (System.Exception e)
+        catch (System.Exception)
         {
-            printer.PrintLine("Nie udało się utworzyć magazynu, niepoprawne dane");
+            _printer.PrintLine("Nie udało się utworzyć magazynu, niepoprawne dane");
         }
     }
 
-    private void exit()
+    private void Exit()
     {
         try
         {
-            fileManager.ExportData(library);
-            printer.PrintLine("Export danych do pliku zakończony powodzeniem");
+            _fileManager.ExportData(_library);
+            _printer.PrintLine("Export danych do pliku zakończony powodzeniem");
         }
         catch (DataExportException e)
         {
-            printer.PrintLine(e.Message);
+            _printer.PrintLine(e.Message);
         }
 
-        printer.PrintLine("Koniec programu, papa!");
+        _printer.PrintLine("Koniec programu, papa!");
     }
 
-    private void printBooks()
+    private void PrintBooks()
     {
-        printer.PrintBooks(library.GetSortedPublications(Comparer<Publication>.Create((x, y) =>
+        _printer.PrintBooks(_library.GetSortedPublications(Comparer<Publication>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.Title, y.Title))));
     }
 
-    private void addBook()
+    private void AddBook()
     {
         try
         {
-            Book book = dataReader.readAndCreateBook();
-            library.AddPublication(book);
+            Book book = _dataReader.readAndCreateBook();
+            _library.AddPublication(book);
         }
-        catch (System.Exception e)
+        catch (System.Exception)
         {
-            printer.PrintLine("Nie udało się utworzyć książki, niepoprawne dane.");
+            _printer.PrintLine("Nie udało się utworzyć książki, niepoprawne dane.");
         }
     }
 
-    private void deleteBook()
+    private void DeleteBook()
     {
         try
         {
-            Book book = dataReader.readAndCreateBook();
-            if (library.RemovePublication(book))
-                printer.PrintLine("Usunięto książkę");
-            else
-                printer.PrintLine("Brak wskazanej książki");
+            Book book = _dataReader.readAndCreateBook();
+            _printer.PrintLine(_library.RemovePublication(book) ? "Usunięto książkę" : "Brak wskazanej książki");
         }
-        catch (System.Exception e)
+        catch (System.Exception)
         {
-            printer.PrintLine("Nie udało się utworzyć książki, niepoprawne dane");
+            _printer.PrintLine("Nie udało się utworzyć książki, niepoprawne dane");
         }
     }
 
-    private void printOptions()
+    private void PrintOptions()
     {
-        printer.PrintLine("Wybierz opcje:");
+        _printer.PrintLine("Wybierz opcje:");
         foreach (Option value in Enum.GetValues(typeof(Option)))
         {
-            printer.PrintLine($"{(int)value} - {GetEnumDescription(value)}");
+            _printer.PrintLine($"{(int)value} - {GetEnumDescription(value)}");
         }
     }
-    
-    public static string GetEnumDescription(Enum value)
+
+    private static string GetEnumDescription(Enum value)
     {
         var fieldInfo = value.GetType().GetField(value.ToString());
-        var attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
+        var attributes = (DescriptionAttribute[])fieldInfo?.GetCustomAttributes(typeof(DescriptionAttribute), false)!;
         return attributes.Length > 0 ? attributes[0].Description : value.ToString();
     }
-    
-    private enum Option {
-        [Description("wyjście z programu")]
-        EXIT = 0,
-        [Description("dodanie nowej książki")]
-        ADD_BOOK = 1,
-        [Description("dodanie nowego magazynu")]
-        ADD_MAGAZINE = 2,
-        [Description("wyświetl dostępne książki")]
-        PRINT_BOOKS = 3,
-        [Description("wyświetl dostępne magazyny")]
-        PRINT_MAGAZINES = 4,
-        [Description("Usuń książkę")]
-        DELETE_BOOK = 5,
-        [Description("Usuń magazyn")]
-        DELETE_MAGAZINE = 6,
-        [Description("Dodaj czytelnika")]
-        ADD_USER = 7,
-        [Description("Wyświetl czytelników")]
-        PRINT_USERS = 8,
-        [Description("Wyszukaj książkę")]
-        FIND_BOOK = 9
 
-        
+    private enum Option
+    {
+        [Description("wyjście z programu")] Exit = 0,
+        [Description("dodanie nowej książki")] AddBook = 1,
+        [Description("dodanie nowego magazynu")] AddMagazine = 2,
+        [Description("wyświetl dostępne książki")] PrintBooks = 3,
+        [Description("wyświetl dostępne magazyny")] PrintMagazines = 4,
+        [Description("Usuń książkę")] DeleteBook = 5,
+        [Description("Usuń magazyn")] DeleteMagazine = 6,
+        [Description("Dodaj czytelnika")] AddUser = 7,
+        [Description("Wyświetl czytelników")] PrintUsers = 8,
+        [Description("Wyszukaj książkę")] FindBook = 9
     }
 }

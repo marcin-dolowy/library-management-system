@@ -2,12 +2,12 @@
 
 class LibraryApp
 {
-    private static String APP_NAME = "Biblioteka";
+    private const string AppName = "Biblioteka";
 
-    public static void Main(string[] args)
+    public static void Main()
     {
-        Console.WriteLine(APP_NAME);
+        Console.WriteLine(AppName);
         LibraryControl libControl = new LibraryControl();
-        libControl.controlLoop();
+        libControl.ControlLoop();
     }
 }
