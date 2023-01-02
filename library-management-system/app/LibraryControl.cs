@@ -12,7 +12,7 @@ class LibraryControl
 {
     private ConsolePrinter printer = new ConsolePrinter();
     private DataReader dataReader;
-    private FileManager fileManager;
+    private IFileManager fileManager;
 
     private Library library;
 

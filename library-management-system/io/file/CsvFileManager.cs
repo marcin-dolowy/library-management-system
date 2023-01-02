@@ -4,7 +4,7 @@ using InvalidDataException = System.IO.InvalidDataException;
 
 namespace library_management_system.io.file;
 
-public class CsvFileManager : FileManager
+public class CsvFileManager : IFileManager
 {
     private static readonly string FileName =
         Path.Combine(

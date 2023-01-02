@@ -11,7 +11,7 @@ public class FileManagerBuilder {
         this.reader = reader;
     }
 
-    public FileManager build() {
+    public IFileManager build() {
         printer.PrintLine("Wybierz format danych:");
         FileType fileType = getFileType();
         switch (fileType) {
