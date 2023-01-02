@@ -22,7 +22,7 @@ class LibraryControl
         fileManager = new FileManagerBuilder(printer, dataReader).build();
         try
         {
-            library = fileManager.importData();
+            library = fileManager.ImportData();
             printer.PrintLine("Zaimportowano dane z pliku");
         }
         catch (System.Exception e) when (e is DataImportException or InvalidDataException)
@@ -173,7 +173,7 @@ class LibraryControl
     {
         try
         {
-            fileManager.exportData(library);
+            fileManager.ExportData(library);
             printer.PrintLine("Export danych do pliku zakończony powodzeniem");
         }
         catch (DataExportException e)

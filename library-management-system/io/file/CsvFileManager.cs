@@ -6,68 +6,68 @@ namespace library_management_system.io.file;
 
 public class CsvFileManager : FileManager
 {
-    private static string FILE_NAME =
+    private static readonly string FileName =
         Path.Combine(
             Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
                 .FullName)!.FullName, "io", "file", "Library.csv");
-
-    private static string USERS_FILE_NAME =
+    
+    private static readonly string UsersFileName =
         Path.Combine(
             Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
                 .FullName)!.FullName, "io", "file", "Library_users.csv");
 
-    public Library importData()
+    public Library ImportData()
     {
         Library library = new Library();
-        importPublications(library);
-        importUsers(library);
+        ImportPublications(library);
+        ImportUsers(library);
         return library;
     }
 
-    private void importPublications(Library library)
+    private static void ImportPublications(Library library)
     {
         try
         {
-            string[] lines = File.ReadAllLines(FILE_NAME);
+            string[] lines = File.ReadAllLines(FileName);
             foreach (string line in lines)
             {
-                var publication = createObjectFromString(line);
+                var publication = CreateObjectFromString(line);
                 library.AddPublication(publication);
             }
         }
-        catch (FileNotFoundException e)
+        catch (FileNotFoundException)
         {
-            throw new DataImportException($"Plik {FILE_NAME} nie został znaleziony.");
+            throw new DataImportException($"Plik {FileName} nie został znaleziony.");
         }
-        catch (IOException e)
+        catch (IOException)
         {
-            throw new DataImportException($"Błąd odczytu pliku {FILE_NAME}.");
+            throw new DataImportException($"Błąd odczytu pliku {FileName}.");
         }
     }
 
-    private void importUsers(Library library)
+    private static void ImportUsers(Library library)
     {
         try
         {
-            string[] lines = File.ReadAllLines(USERS_FILE_NAME);
+            string[] lines = File.ReadAllLines(UsersFileName);
             foreach (string line in lines)
             {
-                var user = createUserFromString(line);
+                var user = CreateUserFromString(line);
                 library.AddUser(user);
             }
         }
-        catch (FileNotFoundException e)
+        catch (FileNotFoundException)
         {
-            throw new DataImportException($"Plik {USERS_FILE_NAME} nie został znaleziony.");
+            throw new DataImportException($"Plik {UsersFileName} nie został znaleziony.");
         }
-        catch (IOException e)
+        catch (IOException)
         {
-            throw new DataImportException($"Błąd odczytu pliku {USERS_FILE_NAME}.");
+            throw new DataImportException($"Błąd odczytu pliku {UsersFileName}.");
         }
     }
 
 
-    private LibraryUser createUserFromString(string csvText)
+    private static LibraryUser CreateUserFromString(string csvText)
     {
         string[] split = csvText.Split(";");
         string firstName = split[0];
@@ -76,23 +76,22 @@ public class CsvFileManager : FileManager
         return new LibraryUser(firstName, lastName, pesel);
     }
 
-    private Publication createObjectFromString(string line)
+    private static Publication CreateObjectFromString(string line)
     {
         string[] split = line.Split(";");
         string type = split[0];
-        if (Book.Type.Equals(type))
+        switch (type)
         {
-            return createBook(split);
+            case Book.Type:
+                return CreateBook(split);
+            case Magazine.Type:
+                return CreateMagazine(split);
+            default:
+                throw new InvalidDataException("Nieznany typ publikacji " + type);
         }
-        else if (Magazine.Type.Equals(type))
-        {
-            return createMagazine(split);
-        }
-
-        throw new InvalidDataException("Nieznany typ publikacji " + type);
     }
 
-    private Magazine createMagazine(string[] data)
+    private static Magazine CreateMagazine(string[] data)
     {
         string title = data[1];
         string publisher = data[2];
@@ -103,7 +102,7 @@ public class CsvFileManager : FileManager
         return new Magazine(title, publisher, language, year, month, day);
     }
 
-    private Book createBook(string[] data)
+    private static Book CreateBook(string[] data)
     {
         string title = data[1];
         string publisher = data[2];
@@ -114,19 +113,19 @@ public class CsvFileManager : FileManager
         return new Book(title, author, year, pages, publisher, isbn);
     }
 
-    private void exportUsers(Library library)
+    private static void ExportUsers(Library library)
     {
         ICollection<LibraryUser> users = library.Users.Values;
-        exportToCsv(users, USERS_FILE_NAME);
+        ExportToCsv(users, UsersFileName);
     }
 
-    private void exportPublications(Library library)
+    private static void ExportPublications(Library library)
     {
         ICollection<Publication> publications = library.Publications.Values;
-        exportToCsv(publications, FILE_NAME);
+        ExportToCsv(publications, FileName);
     }
 
-    private void exportToCsv<T>(ICollection<T> collection, string fileName) where T : ICsvConvertible
+    private static void ExportToCsv<T>(ICollection<T> collection, string fileName) where T : ICsvConvertible
     {
         try
         {
@@ -136,15 +135,15 @@ public class CsvFileManager : FileManager
                 file.WriteLine(element.ToCsv());
             }
         }
-        catch (IOException e)
+        catch (IOException)
         {
             throw new DataExportException("Błąd zapisu danych do pliku " + fileName);
         }
     }
 
-    public void exportData(Library library)
+    public void ExportData(Library library)
     {
-        exportPublications(library);
-        exportUsers(library);
+        ExportPublications(library);
+        ExportUsers(library);
     }
 }

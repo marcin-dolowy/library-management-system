@@ -4,6 +4,6 @@ namespace library_management_system.io.file;
 
 public interface FileManager
 {
-    Library importData();
-    void exportData(Library library);
+    Library ImportData();
+    void ExportData(Library library);
 }
