@@ -43,57 +43,117 @@ public class LibraryControl
         {
             PrintOptions();
             option = GetOption();
-            switch (option)
+            if (_isAdmin)
             {
-                case (int)Option.AddBook:
-                    AddBook();
-                    break;
-                case (int)Option.AddMagazine:
-                    AddMagazine();
-                    break;
-                case (int)Option.PrintBooks:
-                    PrintBooks();
-                    break;
-                case (int)Option.PrintMagazines:
-                    PrintMagazines();
-                    break;
-                case (int)Option.DeleteBook:
-                    DeleteBook();
-                    break;
-                case (int)Option.DeleteMagazine:
-                    DeleteMagazine();
-                    break;
-                case (int)Option.AddUser:
-                    AddUser();
-                    break;
-                case (int)Option.PrintUsers:
-                    PrintUsers();
-                    break;
-                case (int)Option.FindBook:
-                    FindBook();
-                    break;
-                case (int)Option.Exit:
-                    Exit();
-                    break;
-                case (int)Option.PrintBorrowed:
-                    PrintBorrowed();
-                    break;
-                case (int)Option.BorrowPublication:
-                    BorrowPublication();
-                    break;
-                case (int)Option.ReturnBook:
-                    ReturnBook();
-                    break;
-                default:
-                    _printer.PrintLine("Brak takiej opcji. Wybierz poprawną.");
-                    break;
+                switch (option)
+                {
+                    case (int)Option.AddBook:
+                        AddBook();
+                        break;
+                    case (int)Option.AddMagazine:
+                        AddMagazine();
+                        break;
+                    case (int)Option.PrintBooks:
+                        PrintBooks();
+                        break;
+                    case (int)Option.PrintMagazines:
+                        PrintMagazines();
+                        break;
+                    case (int)Option.DeleteBook:
+                        DeleteBook();
+                        break;
+                    case (int)Option.DeleteMagazine:
+                        DeleteMagazine();
+                        break;
+                    case (int)Option.AddUser:
+                        AddUser();
+                        break;
+                    case (int)Option.PrintUsers:
+                        PrintUsers();
+                        break;
+                    case (int)Option.FindBook:
+                        FindBook();
+                        break;
+                    case (int)Option.Exit:
+                        Exit();
+                        break;
+                    case (int)Option.PrintBorrowed:
+                        PrintBorrowed();
+                        break;
+                    case (int)Option.BorrowPublication:
+                        BorrowPublication();
+                        break;
+                    case (int)Option.ReturnPublication:
+                        ReturnPublication();
+                        break;
+                    default:
+                        _printer.PrintLine("Brak takiej opcji. Wybierz poprawną.");
+                        break;
+                }
             }
+            else
+            {
+                switch (option)
+                {
+                    case (int)Option.PrintBooks:
+                        PrintBooks();
+                        break;
+                    case (int)Option.PrintMagazines:
+                        PrintMagazines();
+                        break;
+                    case (int)Option.FindBook:
+                        FindBook();
+                        break;
+                    case (int)Option.Exit:
+                        Exit();
+                        break;
+                    case (int)Option.PrintBorrowed:
+                        PrintBorrowed();
+                        break;
+                    case (int)Option.BorrowPublication:
+                        BorrowPublication();
+                        break;
+                    case (int)Option.ReturnPublication:
+                        ReturnPublication();
+                        break;
+                    default:
+                        _printer.PrintLine("Brak takiej opcji. Wybierz poprawną.");
+                        break;
+                }
+            }
+            
         } while (option != (int)Option.Exit);
     }
 
-    private void ReturnBook()
+    private void ReturnPublication()
     {
-        throw new NotImplementedException();
+        try
+        {
+            if (_isAdmin)
+            {
+                _printer.PrintLine("Podaj pesel: ");
+                string pesel = _dataReader.GetString();
+                _printer.PrintLine("Podaj tytuł: ");
+                string title = _dataReader.GetString();
+
+                Borrow? borrow = _library.Borrows.FirstOrDefault(b => b.Title == title && b.Pesel == pesel);
+
+                _printer.PrintLine(_library.RemoveBorrow(borrow!) ? "Usunięto wypożyczenie" : "Brak wskazanego wypożyczenia");
+            }
+            else
+            {
+                _printer.PrintLine("Podaj tytuł: ");
+                string title = _dataReader.GetString();
+
+                Borrow? borrow = _library.Borrows.FirstOrDefault(b => b.Title == title && b.Pesel == _currentUser.Pesel);
+
+                _printer.PrintLine(_library.RemoveBorrow(borrow!) ? "Usunięto wypożyczenie" : "Brak wskazanego wypożyczenia");
+            }
+        }
+        catch (System.Exception)
+        {
+            _printer.PrintLine("Nie udało się utworzyć książki, niepoprawne dane");
+        }
     }
 
     private void BorrowPublication()
@@ -144,9 +204,19 @@ public class LibraryControl
 
     private void PrintBorrowed()
     {
-        foreach (Borrow borrow in _library.Borrows)
+        if (_isAdmin)
         {
-            _printer.PrintLine(borrow.ToString());
+            foreach (Borrow borrow in _library.Borrows)
+            {
+                _printer.PrintLine(borrow.ToString());
+            }
+        }
+        else
+        {
+            foreach (Borrow borrow in _library.Borrows.Where(b => b.Pesel == _currentUser.Pesel))
+            {
+                _printer.PrintLine(borrow.ToString());
+            }
         }
     }
 
@@ -334,7 +404,7 @@ public class LibraryControl
         [Description("wyświetl dostępne magazyny")]
         PrintMagazines = 2,
         [Description("wypożycz publikacje")] BorrowPublication = 3,
-        [Description("zwróć publikacje")] ReturnBook = 4,
+        [Description("zwróć publikacje")] ReturnPublication = 4,
         [Description("Wyszukaj publikacje")] FindBook = 5,
         [Description("wyświetl wypożyczone publikacje")]
         PrintBorrowed = 6,

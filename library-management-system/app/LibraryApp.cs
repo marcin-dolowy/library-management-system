@@ -27,7 +27,7 @@ class LibraryApp
         // if (message.Equals("a"))
         // {
         LibraryUser loggedUser = new LibraryUser("Marcin", "Filipczuk", "8576232"); // to z drugiego programu dostaniemy
-        bool isAdmin = false; //to samo co wyzej
+        bool isAdmin = true; //to samo co wyzej
         Console.WriteLine(AppName);
         LibraryControl libControl = new LibraryControl(loggedUser, isAdmin);
         libControl.ControlLoop();

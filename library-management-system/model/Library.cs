@@ -69,4 +69,11 @@ public class Library
         
         Borrows.Add(borrow);
     }
+
+    public bool RemoveBorrow(Borrow borrow)
+    {
+        if (!Borrows.Contains(borrow)) return false;
+        Borrows.Remove(borrow);
+        return true;
+    }
 }
