@@ -7,6 +7,7 @@ public class Library
     public Dictionary<string, Publication> Publications { get; } = new();
 
     public Dictionary<string, LibraryUser> Users { get; } = new();
+    public List<Borrow> Borrows { get; } = new();
 
     public ICollection<Publication> GetSortedPublications(IComparer<Publication> comparer)
     {
@@ -47,5 +48,25 @@ public class Library
         if (!Publications.ContainsValue(pub)) return false;
         Publications.Remove(pub.Title);
         return true;
+    }
+
+    public void AddBorrowed(Borrow borrow)
+    {
+        if (Borrows.Contains(borrow))
+        {
+            throw new BorrowAlreadyExistsException("Dane wypożyczenie już istnieje: " + borrow);
+        }
+
+        if (!Users.ContainsKey(borrow.Pesel))
+        {
+            throw new NotALibraryUserException("Nie ma takiego użytkownika jak " + borrow.Pesel);
+        }
+
+        if (!Publications.ContainsKey(borrow.Title))
+        {
+            throw new NoSuchTitleException("Brak takiego tytułu jak " + borrow.Title);
+        }
+        
+        Borrows.Add(borrow);
     }
 }

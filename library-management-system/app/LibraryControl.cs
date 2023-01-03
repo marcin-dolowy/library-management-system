@@ -14,9 +14,13 @@ public class LibraryControl
     private readonly IFileManager _fileManager;
 
     private readonly Library _library;
+    private readonly LibraryUser _currentUser;
+    private bool _isAdmin;
 
-    public LibraryControl()
+    public LibraryControl(LibraryUser currentUser, bool isAdmin)
     {
+        _currentUser = currentUser;
+        _isAdmin = isAdmin;
         _dataReader = new DataReader(_printer);
         _fileManager = new FileManagerBuilder(_printer, _dataReader).Build();
         try
@@ -71,11 +75,79 @@ public class LibraryControl
                 case (int)Option.Exit:
                     Exit();
                     break;
+                case (int)Option.PrintBorrowed:
+                    PrintBorrowed();
+                    break;
+                case (int)Option.BorrowPublication:
+                    BorrowPublication();
+                    break;
+                case (int)Option.ReturnBook:
+                    ReturnBook();
+                    break;
                 default:
                     _printer.PrintLine("Brak takiej opcji. Wybierz poprawną.");
                     break;
             }
         } while (option != (int)Option.Exit);
+    }
+
+    private void ReturnBook()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void BorrowPublication()
+    {
+        if (_isAdmin)
+        {
+            Borrow borrow = _dataReader.CreateBorrow();
+            try
+            {
+                _library.AddBorrowed(borrow);
+            }
+            catch (NoSuchTitleException e)
+            {
+                _printer.PrintLine(e.Message);
+            }
+            catch (NotALibraryUserException e)
+            {
+                _printer.PrintLine(e.Message);
+            }
+            catch (BorrowAlreadyExistsException e)
+            {
+                _printer.PrintLine(e.Message);
+            }
+        }
+        else
+        {
+            _printer.PrintLine("Podaj tytuł publikacji:");
+            String title = _dataReader.GetString();
+            try
+            {
+                _library.AddBorrowed(new Borrow(_currentUser.Pesel, title));
+            }
+            catch (NoSuchTitleException e)
+            {
+                _printer.PrintLine(e.Message);
+            }
+            catch (NotALibraryUserException e)
+            {
+                _printer.PrintLine(e.Message);
+            }
+            catch (BorrowAlreadyExistsException e)
+            {
+                _printer.PrintLine(e.Message);
+            }
+        }
+        _printer.PrintLine("Pomyślnie wypożyczono");
+    }
+
+    private void PrintBorrowed()
+    {
+        foreach (Borrow borrow in _library.Borrows)
+        {
+            _printer.PrintLine(borrow.ToString());
+        }
     }
 
     private void FindBook()
@@ -146,9 +218,9 @@ public class LibraryControl
             Magazine magazine = _dataReader.ReadAndCreateMagazine();
             _library.AddPublication(magazine);
         }
-        catch (System.Exception)
+        catch (PublicationAlreadyExistsException e)
         {
-            _printer.PrintLine("Nie udało się utworzyć magazynu, niepoprawne dane.");
+            _printer.PrintLine(e.Message);
         }
     }
 
@@ -156,8 +228,11 @@ public class LibraryControl
     {
         try
         {
-            Magazine magazine = _dataReader.ReadAndCreateMagazine();
-            _printer.PrintLine(_library.RemovePublication(magazine) ? "Usunięto magazyn" : "Brak wskazanego magazynu");
+            string title = _dataReader.ReadTitleFromMagazine();
+            Publication magazine = _library.Publications.Values.Where(p => p is Magazine)
+                .SingleOrDefault(b => b.Title == title)!;
+
+            _printer.PrintLine(_library.RemovePublication(magazine!) ? "Usunięto magazyn" : "Brak wskazanego magazynu");
         }
         catch (System.Exception)
         {
@@ -193,9 +268,9 @@ public class LibraryControl
             Book book = _dataReader.ReadAndCreateBook();
             _library.AddPublication(book);
         }
-        catch (System.Exception)
+        catch (System.Exception e)
         {
-            _printer.PrintLine("Nie udało się utworzyć książki, niepoprawne dane.");
+            _printer.PrintLine(e.Message);
         }
     }
 
@@ -203,8 +278,12 @@ public class LibraryControl
     {
         try
         {
-            Book book = _dataReader.ReadAndCreateBook();
-            _printer.PrintLine(_library.RemovePublication(book) ? "Usunięto książkę" : "Brak wskazanej książki");
+            var booksFromPublications =
+                _library.Publications.Values.Where(p => p is Book).ToList().Cast<Book>().ToList();
+            var isbn = _dataReader.ReadIsbnFromBook();
+            var book = booksFromPublications.FirstOrDefault(b => b.Isbn == isbn);
+            
+            _printer.PrintLine(_library.RemovePublication(book!) ? "Usunięto książkę" : "Brak wskazanej książki");
         }
         catch (System.Exception)
         {
@@ -215,10 +294,27 @@ public class LibraryControl
     private void PrintOptions()
     {
         _printer.PrintLine("Wybierz opcje:");
-        foreach (Option value in Enum.GetValues(typeof(Option)))
+        if (_isAdmin)
         {
-            _printer.PrintLine($"{(int)value} - {GetEnumDescription(value)}");
+            foreach (Option value in Enum.GetValues(typeof(Option)))
+            {
+                _printer.PrintLine($"{(int)value} - {GetEnumDescription(value)}");
+            }
         }
+        else
+        {
+            int i = 0;
+            foreach (Option value in Enum.GetValues(typeof(Option)))
+            {
+                _printer.PrintLine($"{(int)value} - {GetEnumDescription(value)}");
+                i++;
+                if (i == 7)
+                {
+                    break;
+                }
+            }
+        }
+        
     }
 
     private static string GetEnumDescription(Enum value)
@@ -231,20 +327,25 @@ public class LibraryControl
     private enum Option
     {
         [Description("wyjście z programu")] Exit = 0,
-        [Description("dodanie nowej książki")] AddBook = 1,
-
-        [Description("dodanie nowego magazynu")]
-        AddMagazine = 2,
 
         [Description("wyświetl dostępne książki")]
-        PrintBooks = 3,
+        PrintBooks = 1,
 
         [Description("wyświetl dostępne magazyny")]
-        PrintMagazines = 4,
-        [Description("Usuń książkę")] DeleteBook = 5,
-        [Description("Usuń magazyn")] DeleteMagazine = 6,
-        [Description("Dodaj czytelnika")] AddUser = 7,
-        [Description("Wyświetl czytelników")] PrintUsers = 8,
-        [Description("Wyszukaj książkę")] FindBook = 9
+        PrintMagazines = 2,
+        [Description("wypożycz publikacje")] BorrowPublication = 3,
+        [Description("zwróć publikacje")] ReturnBook = 4,
+        [Description("Wyszukaj publikacje")] FindBook = 5,
+        [Description("wyświetl wypożyczone publikacje")]
+        PrintBorrowed = 6,
+
+        [Description("dodanie nowej książki")] AddBook = 7,
+
+        [Description("dodanie nowego magazynu")]
+        AddMagazine = 8,
+        [Description("Usuń książkę")] DeleteBook = 9,
+        [Description("Usuń magazyn")] DeleteMagazine = 10,
+        [Description("Dodaj czytelnika")] AddUser = 11,
+        [Description("Wyświetl czytelników")] PrintUsers = 12
     }
 }

@@ -5,7 +5,7 @@ public class Book : Publication
     public const string Type = "Książka";
     private string Author { get; }
     private int Pages { get; }
-    private string Isbn { get; }
+    public string Isbn { get; }
 
     public Book(string title, string author, int year, int pages, string publisher, string isbn) : base(year, title,
         publisher)
