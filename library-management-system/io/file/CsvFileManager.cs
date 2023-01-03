@@ -15,13 +15,51 @@ public class CsvFileManager : IFileManager
         Path.Combine(
             Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
                 .FullName)!.FullName, "io", "file", "Library_users.csv");
+    
+    private static readonly string BorrowedFileName =
+        Path.Combine(
+            Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
+                .FullName)!.FullName, "io", "file", "Borrowed.csv");
 
     public Library ImportData()
     {
+        if (!File.Exists(FileName) || !File.Exists(UsersFileName)|| !File.Exists(BorrowedFileName))
+        {
+            throw new DataImportException($"Plik {FileName}, {UsersFileName} lub/i {BorrowedFileName} nie został znaleziony.");
+        }
+        
         Library library = new Library();
         ImportPublications(library);
         ImportUsers(library);
+        ImportBorrowed(library);
         return library;
+    }
+
+    private static async void ImportBorrowed(Library library)
+    {
+        try
+        {
+            using FileReader reader = new FileReader(BorrowedFileName);
+            while (true)
+            {
+                string? line = await reader.ReadLine();
+                if (line == null)
+                {
+                    break;
+                }
+
+                var borrow = CreateBorrowFromString(line);
+                library.AddBorrowed(borrow);
+            }
+        }
+        catch (FileNotFoundException)
+        {
+            throw new DataImportException($"Plik {BorrowedFileName} nie został znaleziony.");
+        }
+        catch (IOException)
+        {
+            throw new DataImportException($"Błąd odczytu pliku {BorrowedFileName}.");
+        }
     }
 
     private static async void ImportPublications(Library library)
@@ -36,6 +74,7 @@ public class CsvFileManager : IFileManager
                 {
                     break;
                 }
+
                 var publication = CreateObjectFromString(line);
                 library.AddPublication(publication);
             }
@@ -101,6 +140,14 @@ public class CsvFileManager : IFileManager
         }
     }
 
+    private static Borrow CreateBorrowFromString(string line)
+    {
+        string[] split = line.Split(";");
+        string userPesel = split[0];
+        string publicationTitle = split[1];
+        return new Borrow(userPesel, publicationTitle);
+    }
+
     private static Magazine CreateMagazine(string[] data)
     {
         string title = data[1];
@@ -134,6 +181,12 @@ public class CsvFileManager : IFileManager
         ICollection<Publication> publications = library.Publications.Values;
         ExportToCsv(publications, FileName);
     }
+    
+    private static void ExportBorrows(Library library)
+    {
+        ICollection<Borrow> borrows = library.Borrows;
+        ExportToCsv(borrows, BorrowedFileName);
+    }
 
     private static void ExportToCsv<T>(IEnumerable<T> collection, string fileName) where T : ICsvConvertible
     {
@@ -155,5 +208,6 @@ public class CsvFileManager : IFileManager
     {
         ExportPublications(library);
         ExportUsers(library);
+        ExportBorrows(library);
     }
 }

@@ -59,6 +59,18 @@ public class DataReader
         string pesel = Console.ReadLine();
         return new LibraryUser(firstName, lastName, pesel);
     }
+    
+    public string ReadIsbnFromBook()
+    {
+        _printer.PrintLine("Wprowadź ISBN książki, którą chcesz usunąć");
+        return Console.ReadLine();
+    }
+    
+    public string ReadTitleFromMagazine()
+    {
+        _printer.PrintLine("Podaj tytul magazynu, który chcesz usunąć");
+        return Console.ReadLine();
+    }
 
     public string GetString()
     {
@@ -88,5 +100,14 @@ public class DataReader
     public bool ContainsOnlyDigits(string input)
     {
         return Regex.IsMatch(input, @"^\d+$");
+    }
+
+    public Borrow CreateBorrow()
+    {
+        _printer.PrintLine("Pesel");
+        string pesel = Console.ReadLine();
+        _printer.PrintLine("Tytuł");
+        string title = Console.ReadLine();
+        return new Borrow(pesel, title);
     }
 }
