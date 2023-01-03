@@ -122,7 +122,8 @@ public class CsvFileManager : IFileManager
         string firstName = split[0];
         string lastName = split[1];
         string pesel = split[2];
-        return new LibraryUser(firstName, lastName, pesel);
+        string password = split[3];
+        return new LibraryUser(firstName, lastName, pesel, password);
     }
 
     private static Publication CreateObjectFromString(string line)

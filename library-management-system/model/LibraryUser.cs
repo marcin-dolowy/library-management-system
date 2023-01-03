@@ -5,7 +5,7 @@ public class LibraryUser : User
     private readonly List<Publication> _publicationHistory = new();
     private readonly List<Publication> _borrowedPublications = new();
 
-    public LibraryUser(string firstName, string lastName, string pesel) : base(firstName, lastName, pesel)
+    public LibraryUser(string firstName, string lastName, string pesel, string password) : base(firstName, lastName, pesel, password)
     {
     }
 
@@ -53,6 +53,6 @@ public class LibraryUser : User
 
     public override string ToCsv()
     {
-        return FirstName + ";" + LastName + ";" + Pesel;
+        return FirstName + ";" + LastName + ";" + Pesel + ";" + Password;
     }
 }

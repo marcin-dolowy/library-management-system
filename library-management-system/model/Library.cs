@@ -6,7 +6,7 @@ public class Library
 {
     public Dictionary<string, Publication> Publications { get; } = new();
 
-    public Dictionary<string, LibraryUser> Users { get; } = new();
+    public Dictionary<string, LibraryUser> Users { get; set; } = new();
     public List<Borrow> Borrows { get; } = new();
 
     public ICollection<Publication> GetSortedPublications(IComparer<Publication> comparer)
@@ -61,7 +61,7 @@ public class Library
         {
             throw new NotALibraryUserException("Nie ma takiego użytkownika jak " + borrow.Pesel);
         }
-
+        
         if (!Publications.ContainsKey(borrow.Title))
         {
             throw new NoSuchTitleException("Brak takiego tytułu jak " + borrow.Title);

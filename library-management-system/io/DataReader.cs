@@ -57,7 +57,9 @@ public class DataReader
         string lastName = Console.ReadLine();
         _printer.PrintLine("Pesel");
         string pesel = Console.ReadLine();
-        return new LibraryUser(firstName, lastName, pesel);
+        _printer.PrintLine("Hasło");
+        string password = Console.ReadLine();
+        return new LibraryUser(firstName, lastName, pesel, password);
     }
     
     public string ReadIsbnFromBook()
