@@ -152,7 +152,7 @@ public class LibraryControl
         }
         catch (System.Exception)
         {
-            _printer.PrintLine("Nie udało się utworzyć książki, niepoprawne dane");
+            _printer.PrintLine("Niepoprawne dane");
         }
     }
 
