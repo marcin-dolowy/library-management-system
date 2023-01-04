@@ -230,14 +230,9 @@ public class LibraryControl
         String title = _dataReader.GetString();
         String notFoundMessage = "Brak publikacji o takim tytule";
 
-        if (Library.Publications.ContainsKey(title))
-        {
-            _printer.PrintLine(Library.Publications[title].ToString());
-        }
-        else
-        {
-            _printer.PrintLine(notFoundMessage);
-        }
+        _printer.PrintLine(Library.Publications.ContainsKey(title)
+            ? Library.Publications[title].ToString()
+            : notFoundMessage);
     }
 
     private void PrintUsers()
