@@ -9,6 +9,7 @@ public class LoginRegistrationForm
         @"C:\Users\huber\RiderProjects\library-management-system\library-management-system\io\file\Library_users.csv";
 
     private static List<User> _users;
+    private static User _admin = new("admin", "admin", "00000000000", "admin");
 
     public static void Main()
     {
@@ -17,11 +18,14 @@ public class LoginRegistrationForm
 
         var streamWriter = new StreamWriter(pipeClient);
         var streamReader = new StreamReader(pipeClient);
-
-        int option;
+        
+        int option = -1;
         do
         {
-            _users = ImportDataByPipe(streamReader);
+            if (option != 1)
+            {
+                _users = ImportDataByPipe(streamReader);
+            }
             Console.WriteLine("Wybierz opcje:");
             Console.WriteLine("0 - Wyjdź z systemu");
             Console.WriteLine("1 - Zaloguj się do systemu");
@@ -57,6 +61,7 @@ public class LoginRegistrationForm
                         pipeClient.Close();
                         return;
                     }
+
                     Console.WriteLine("Brak takiego użytkownika. Sprawdź wprowadzone dane.");
 
                     break;
@@ -115,17 +120,12 @@ public class LoginRegistrationForm
 
     private static List<User> ImportDataByPipe(StreamReader streamReader)
     {
-        List<User> usersList = new List<User>();
         var stringUsers = streamReader.ReadLine();
 
         string[] users = stringUsers.Split('#');
-        foreach (var user in users)
-        {
-            string[] userData = user.Split(';');
-            usersList.Add(new User(userData[0], userData[1], userData[2], userData[3]));
-        }
-
-        return usersList;
+        //convert from string to users list
+        return users.Select(user => user.Split(';'))
+            .Select(userData => new User(userData[0], userData[1], userData[2], userData[3])).ToList();
     }
 
     private static void ExportData()
@@ -144,55 +144,17 @@ public class LoginRegistrationForm
         }
     }
 
-    private static List<User> ImportData()
-    {
-        if (!File.Exists(usersFileName))
-        {
-            throw new FileNotFoundException("Brak pliku z użytkownikami");
-        }
-
-        List<User> users = new List<User>();
-        ImportUsers(users);
-        return users;
-    }
-
-    private static void ImportUsers(List<User> users)
-    {
-        try
-        {
-            using StreamReader sr = new StreamReader(usersFileName);
-            string line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                string[] data = line.Split(";");
-                users.Add(new User(data[0], data[1], data[2], data[3]));
-            }
-        }
-        catch (FileNotFoundException)
-        {
-            throw new FileNotFoundException($"Plik {usersFileName} nie został znaleziony.");
-        }
-        catch (IOException)
-        {
-            throw new IOException($"Błąd odczytu pliku {usersFileName}.");
-        }
-    }
-
     private static User ValidateUser()
     {
         Console.WriteLine("Podaj pesel:");
-        string? pesel = GetInput();
+        string pesel = GetInput();
         Console.WriteLine("Podaj hasło:");
-        string? password = GetInput();
-
-        foreach (User user in _users)
+        string password = GetInput();
+        if (pesel.Equals(_admin.Pesel) && password.Equals(_admin.Password))
         {
-            if (pesel != null && password != null && pesel.Equals(user.Pesel) && password.Equals(user.Password))
-            {
-                return user;
-            }
+            return _admin;
         }
 
-        return null;
+        return _users.FirstOrDefault(user => pesel.Equals(user.Pesel) && password.Equals(user.Password));
     }
 }
