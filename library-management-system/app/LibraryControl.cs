@@ -13,26 +13,26 @@ public class LibraryControl
     private readonly DataReader _dataReader;
     private readonly IFileManager _fileManager;
 
-    private readonly Library _library;
-    private readonly LibraryUser _currentUser;
-    private bool _isAdmin;
+    public Library Library { get; set; }
+    public LibraryUser CurrentUser { get; set; }
+    public bool IsAdmin { get; set; }
 
     public LibraryControl(LibraryUser currentUser, bool isAdmin)
     {
-        _currentUser = currentUser;
-        _isAdmin = isAdmin;
+        CurrentUser = currentUser;
+        IsAdmin = isAdmin;
         _dataReader = new DataReader(_printer);
         _fileManager = new FileManagerBuilder(_printer, _dataReader).Build();
         try
         {
-            _library = _fileManager.ImportData();
+            Library = _fileManager.ImportData();
             _printer.PrintLine("Zaimportowano dane z pliku");
         }
         catch (System.Exception e) when (e is DataImportException or InvalidDataException)
         {
             _printer.PrintLine(e.Message);
             _printer.PrintLine("Zainicjowano nową bazę.");
-            _library = new Library();
+            Library = new Library();
         }
     }
 
@@ -43,7 +43,7 @@ public class LibraryControl
         {
             PrintOptions();
             option = GetOption();
-            if (_isAdmin)
+            if (IsAdmin)
             {
                 switch (option)
                 {
@@ -121,7 +121,6 @@ public class LibraryControl
                         break;
                 }
             }
-            
         } while (option != (int)Option.Exit);
     }
 
@@ -129,25 +128,29 @@ public class LibraryControl
     {
         try
         {
-            if (_isAdmin)
+            if (IsAdmin)
             {
                 _printer.PrintLine("Podaj pesel: ");
                 string pesel = _dataReader.GetString();
                 _printer.PrintLine("Podaj tytuł: ");
                 string title = _dataReader.GetString();
 
-                Borrow? borrow = _library.Borrows.FirstOrDefault(b => b.Title == title && b.Pesel == pesel);
+                Borrow? borrow = Library.Borrows.FirstOrDefault(b => b.Title == title && b.Pesel == pesel);
 
-                _printer.PrintLine(_library.RemoveBorrow(borrow!) ? "Usunięto wypożyczenie" : "Brak wskazanego wypożyczenia");
+                _printer.PrintLine(Library.RemoveBorrow(borrow!)
+                    ? "Usunięto wypożyczenie"
+                    : "Brak wskazanego wypożyczenia");
             }
             else
             {
                 _printer.PrintLine("Podaj tytuł: ");
                 string title = _dataReader.GetString();
 
-                Borrow? borrow = _library.Borrows.FirstOrDefault(b => b.Title == title && b.Pesel == _currentUser.Pesel);
+                Borrow? borrow = Library.Borrows.FirstOrDefault(b => b.Title == title && b.Pesel == CurrentUser.Pesel);
 
-                _printer.PrintLine(_library.RemoveBorrow(borrow!) ? "Usunięto wypożyczenie" : "Brak wskazanego wypożyczenia");
+                _printer.PrintLine(Library.RemoveBorrow(borrow!)
+                    ? "Usunięto wypożyczenie"
+                    : "Brak wskazanego wypożyczenia");
             }
         }
         catch (System.Exception)
@@ -158,12 +161,12 @@ public class LibraryControl
 
     private void BorrowPublication()
     {
-        if (_isAdmin)
+        if (IsAdmin)
         {
             Borrow borrow = _dataReader.CreateBorrow();
             try
             {
-                _library.AddBorrowed(borrow);
+                Library.AddBorrowed(borrow);
             }
             catch (NoSuchTitleException e)
             {
@@ -184,7 +187,7 @@ public class LibraryControl
             String title = _dataReader.GetString();
             try
             {
-                _library.AddBorrowed(new Borrow(_currentUser.Pesel, title));
+                Library.AddBorrowed(new Borrow(CurrentUser.Pesel, title));
             }
             catch (NoSuchTitleException e)
             {
@@ -199,21 +202,22 @@ public class LibraryControl
                 _printer.PrintLine(e.Message);
             }
         }
+
         _printer.PrintLine("Pomyślnie wypożyczono");
     }
 
     private void PrintBorrowed()
     {
-        if (_isAdmin)
+        if (IsAdmin)
         {
-            foreach (Borrow borrow in _library.Borrows)
+            foreach (Borrow borrow in Library.Borrows)
             {
                 _printer.PrintLine(borrow.ToString());
             }
         }
         else
         {
-            foreach (Borrow borrow in _library.Borrows.Where(b => b.Pesel == _currentUser.Pesel))
+            foreach (Borrow borrow in Library.Borrows.Where(b => b.Pesel == CurrentUser.Pesel))
             {
                 _printer.PrintLine(borrow.ToString());
             }
@@ -226,9 +230,9 @@ public class LibraryControl
         String title = _dataReader.GetString();
         String notFoundMessage = "Brak publikacji o takim tytule";
 
-        if (_library.Publications.ContainsKey(title))
+        if (Library.Publications.ContainsKey(title))
         {
-            _printer.PrintLine(_library.Publications[title].ToString());
+            _printer.PrintLine(Library.Publications[title].ToString());
         }
         else
         {
@@ -238,7 +242,7 @@ public class LibraryControl
 
     private void PrintUsers()
     {
-        _printer.PrintUsers(_library.GetSortedUsers(Comparer<LibraryUser>.Create((x, y) =>
+        _printer.PrintUsers(Library.GetSortedUsers(Comparer<LibraryUser>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.LastName, y.LastName))));
     }
 
@@ -247,7 +251,7 @@ public class LibraryControl
         LibraryUser libraryUser = _dataReader.CreateLibraryUser();
         try
         {
-            _library.AddUser(libraryUser);
+            Library.AddUser(libraryUser);
         }
         catch (UserAlreadyExistsException e)
         {
@@ -277,7 +281,7 @@ public class LibraryControl
 
     private void PrintMagazines()
     {
-        _printer.PrintMagazines(_library.GetSortedPublications(Comparer<Publication>.Create((x, y) =>
+        _printer.PrintMagazines(Library.GetSortedPublications(Comparer<Publication>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.Title, y.Title))));
     }
 
@@ -286,7 +290,7 @@ public class LibraryControl
         try
         {
             Magazine magazine = _dataReader.ReadAndCreateMagazine();
-            _library.AddPublication(magazine);
+            Library.AddPublication(magazine);
         }
         catch (PublicationAlreadyExistsException e)
         {
@@ -299,10 +303,10 @@ public class LibraryControl
         try
         {
             string title = _dataReader.ReadTitleFromMagazine();
-            Publication magazine = _library.Publications.Values.Where(p => p is Magazine)
+            Publication magazine = Library.Publications.Values.Where(p => p is Magazine)
                 .SingleOrDefault(b => b.Title == title)!;
 
-            _printer.PrintLine(_library.RemovePublication(magazine!) ? "Usunięto magazyn" : "Brak wskazanego magazynu");
+            _printer.PrintLine(Library.RemovePublication(magazine!) ? "Usunięto magazyn" : "Brak wskazanego magazynu");
         }
         catch (System.Exception)
         {
@@ -310,11 +314,11 @@ public class LibraryControl
         }
     }
 
-    private void Exit()
+    public void Exit()
     {
         try
         {
-            _fileManager.ExportData(_library);
+            _fileManager.ExportData(Library);
             _printer.PrintLine("Export danych do pliku zakończony powodzeniem");
         }
         catch (DataExportException e)
@@ -327,7 +331,7 @@ public class LibraryControl
 
     private void PrintBooks()
     {
-        _printer.PrintBooks(_library.GetSortedPublications(Comparer<Publication>.Create((x, y) =>
+        _printer.PrintBooks(Library.GetSortedPublications(Comparer<Publication>.Create((x, y) =>
             StringComparer.OrdinalIgnoreCase.Compare(x.Title, y.Title))));
     }
 
@@ -336,7 +340,7 @@ public class LibraryControl
         try
         {
             Book book = _dataReader.ReadAndCreateBook();
-            _library.AddPublication(book);
+            Library.AddPublication(book);
         }
         catch (System.Exception e)
         {
@@ -349,11 +353,11 @@ public class LibraryControl
         try
         {
             var booksFromPublications =
-                _library.Publications.Values.Where(p => p is Book).ToList().Cast<Book>().ToList();
+                Library.Publications.Values.Where(p => p is Book).ToList().Cast<Book>().ToList();
             var isbn = _dataReader.ReadIsbnFromBook();
             var book = booksFromPublications.FirstOrDefault(b => b.Isbn == isbn);
-            
-            _printer.PrintLine(_library.RemovePublication(book!) ? "Usunięto książkę" : "Brak wskazanej książki");
+
+            _printer.PrintLine(Library.RemovePublication(book!) ? "Usunięto książkę" : "Brak wskazanej książki");
         }
         catch (System.Exception)
         {
@@ -364,7 +368,7 @@ public class LibraryControl
     private void PrintOptions()
     {
         _printer.PrintLine("Wybierz opcje:");
-        if (_isAdmin)
+        if (IsAdmin)
         {
             foreach (Option value in Enum.GetValues(typeof(Option)))
             {
@@ -384,7 +388,6 @@ public class LibraryControl
                 }
             }
         }
-        
     }
 
     private static string GetEnumDescription(Enum value)
@@ -406,6 +409,7 @@ public class LibraryControl
         [Description("wypożycz publikacje")] BorrowPublication = 3,
         [Description("zwróć publikacje")] ReturnPublication = 4,
         [Description("Wyszukaj publikacje")] FindBook = 5,
+
         [Description("wyświetl wypożyczone publikacje")]
         PrintBorrowed = 6,
 

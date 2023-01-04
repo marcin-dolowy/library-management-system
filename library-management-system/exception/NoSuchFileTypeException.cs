@@ -1,9 +1,7 @@
 namespace library_management_system.Exception;
 
-using System;
-
 [Serializable]
-public class NoSuchFileTypeException : Exception
+public class NoSuchFileTypeException : System.Exception
 {
     public NoSuchFileTypeException()
     {

@@ -11,7 +11,7 @@ public class Borrow : ICsvConvertible
         this.Pesel = pesel;
         this.Title = title;
     }
-    
+
     public override string ToString()
     {
         return Pesel + "; " + Title;

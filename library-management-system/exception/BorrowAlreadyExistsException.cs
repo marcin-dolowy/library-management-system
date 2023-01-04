@@ -1,9 +1,7 @@
 ﻿namespace library_management_system.Exception;
 
-using System;
-
 [Serializable]
-public class BorrowAlreadyExistsException : Exception
+public class BorrowAlreadyExistsException : System.Exception
 {
     public BorrowAlreadyExistsException()
     {

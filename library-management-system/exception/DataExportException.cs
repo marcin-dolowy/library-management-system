@@ -1,9 +1,7 @@
 namespace library_management_system.Exception;
 
-using System;
-
 [Serializable]
-public class DataExportException : Exception
+public class DataExportException : System.Exception
 {
     public DataExportException()
     {

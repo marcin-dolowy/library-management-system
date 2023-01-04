@@ -1,13 +1,13 @@
-﻿namespace library_management_system.model;
+﻿namespace library_management_system_login.model;
 
-public abstract class User : ICsvConvertible
+public class User
 {
     public string FirstName { get; }
     public string LastName { get; }
     public string Pesel { get; }
     public string Password { get; }
 
-    protected User(string firstName, string lastName, string pesel, string password)
+    public User(string firstName, string lastName, string pesel, string password)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -17,8 +17,7 @@ public abstract class User : ICsvConvertible
 
     protected bool Equals(User other)
     {
-        return FirstName == other.FirstName && LastName == other.LastName && Pesel == other.Pesel &&
-               Password == other.Password;
+        return FirstName == other.FirstName && LastName == other.LastName && Pesel == other.Pesel && Password == other.Password;
     }
 
     public override bool Equals(object? obj)
@@ -33,11 +32,14 @@ public abstract class User : ICsvConvertible
     {
         return HashCode.Combine(FirstName, LastName, Pesel, Password);
     }
+    
+    public string ToCsv()
+    {
+        return FirstName + ";" + LastName + ";" + Pesel + ";" + Password;
+    }
 
     public override string ToString()
     {
-        return FirstName + " " + LastName + " " + Pesel;
+        return FirstName + ";" + LastName + ";" + Pesel;
     }
-
-    public abstract string ToCsv();
 }

@@ -1,9 +1,7 @@
 namespace library_management_system.Exception;
 
-using System;
-
 [Serializable]
-public class UserAlreadyExistsException : Exception
+public class UserAlreadyExistsException : System.Exception
 {
     public UserAlreadyExistsException()
     {
