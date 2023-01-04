@@ -1,9 +1,7 @@
 ﻿namespace library_management_system.Exception;
 
-using System;
-
 [Serializable]
-public class NoSuchTitleException : Exception
+public class NoSuchTitleException : System.Exception
 {
     public NoSuchTitleException()
     {

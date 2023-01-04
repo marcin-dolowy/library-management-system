@@ -17,7 +17,8 @@ public abstract class User : ICsvConvertible
 
     protected bool Equals(User other)
     {
-        return FirstName == other.FirstName && LastName == other.LastName && Pesel == other.Pesel && Password == other.Password;
+        return FirstName == other.FirstName && LastName == other.LastName && Pesel == other.Pesel &&
+               Password == other.Password;
     }
 
     public override bool Equals(object? obj)

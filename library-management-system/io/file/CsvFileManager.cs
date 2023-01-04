@@ -10,12 +10,12 @@ public class CsvFileManager : IFileManager
         Path.Combine(
             Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
                 .FullName)!.FullName, "io", "file", "Library.csv");
-    
+
     private static readonly string UsersFileName =
         Path.Combine(
             Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
                 .FullName)!.FullName, "io", "file", "Library_users.csv");
-    
+
     private static readonly string BorrowedFileName =
         Path.Combine(
             Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
@@ -23,11 +23,12 @@ public class CsvFileManager : IFileManager
 
     public Library ImportData()
     {
-        if (!File.Exists(FileName) || !File.Exists(UsersFileName)|| !File.Exists(BorrowedFileName))
+        if (!File.Exists(FileName) || !File.Exists(UsersFileName) || !File.Exists(BorrowedFileName))
         {
-            throw new DataImportException($"Plik {FileName}, {UsersFileName} lub/i {BorrowedFileName} nie został znaleziony.");
+            throw new DataImportException(
+                $"Plik {FileName}, {UsersFileName} lub/i {BorrowedFileName} nie został znaleziony.");
         }
-        
+
         Library library = new Library();
         ImportPublications(library);
         ImportUsers(library);
@@ -101,6 +102,7 @@ public class CsvFileManager : IFileManager
                 {
                     break;
                 }
+
                 var user = CreateUserFromString(line);
                 library.AddUser(user);
             }
@@ -182,7 +184,7 @@ public class CsvFileManager : IFileManager
         ICollection<Publication> publications = library.Publications.Values;
         ExportToCsv(publications, FileName);
     }
-    
+
     private static void ExportBorrows(Library library)
     {
         ICollection<Borrow> borrows = library.Borrows;

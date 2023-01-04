@@ -1,9 +1,7 @@
 namespace library_management_system.Exception;
 
-using System;
-
 [Serializable]
-public class PublicationAlreadyExistsException : Exception
+public class PublicationAlreadyExistsException : System.Exception
 {
     public PublicationAlreadyExistsException()
     {

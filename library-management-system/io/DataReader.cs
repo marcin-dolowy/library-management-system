@@ -61,13 +61,13 @@ public class DataReader
         string password = Console.ReadLine();
         return new LibraryUser(firstName, lastName, pesel, password);
     }
-    
+
     public string ReadIsbnFromBook()
     {
         _printer.PrintLine("Wprowadź ISBN książki, którą chcesz usunąć");
         return Console.ReadLine();
     }
-    
+
     public string ReadTitleFromMagazine()
     {
         _printer.PrintLine("Podaj tytul magazynu, który chcesz usunąć");

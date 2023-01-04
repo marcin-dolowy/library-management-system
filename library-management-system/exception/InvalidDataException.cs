@@ -1,9 +1,7 @@
 namespace library_management_system.Exception;
 
-using System;
-
 [Serializable]
-public class InvalidDataException : Exception
+public class InvalidDataException : System.Exception
 {
     public InvalidDataException()
     {

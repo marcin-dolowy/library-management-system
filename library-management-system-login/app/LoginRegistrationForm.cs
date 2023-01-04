@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO.Pipes;
+﻿using System.IO.Pipes;
 using library_management_system_login.model;
 
 namespace library_management_system_login.app;
@@ -40,7 +39,7 @@ public class LoginRegistrationForm
                     {
                         Console.WriteLine(e.Message);
                     }
-                    
+
                     Console.WriteLine("Koniec programu, papa!");
                     pipeClient.Close();
                     break;
@@ -58,24 +57,27 @@ public class LoginRegistrationForm
                         pipeClient.Close();
                         return;
                     }
-                    //to musi być
-                    else
-                    {
-                        Console.WriteLine("Brak takiego użytkownika. Sprawdź wprowadzone dane.");
-                    }
+                    Console.WriteLine("Brak takiego użytkownika. Sprawdź wprowadzone dane.");
 
                     break;
                 case 2:
                     Console.WriteLine("Podaj imię:");
-                    string? firstName = Console.ReadLine();
+                    string firstName = GetInput();
                     Console.WriteLine("Podaj nazwisko:");
-                    string? lastName = Console.ReadLine();
+                    string lastName = GetInput();
                     Console.WriteLine("Podaj pesel:");
-                    string? pesel = Console.ReadLine();
+                    string pesel = GetInput();
                     Console.WriteLine("Podaj hasło:");
-                    string? password = Console.ReadLine();
+                    string password = GetInput();
 
                     User newUser = new User(firstName, lastName, pesel, password);
+
+                    if (_users.Any(p => p.Pesel.Equals(pesel)))
+                    {
+                        Console.WriteLine("Użytkownik o podanym peselu już istnieje!");
+                        break;
+                    }
+
                     _users.Add(newUser);
 
                     string usersString = "";
@@ -83,11 +85,12 @@ public class LoginRegistrationForm
                     {
                         usersString += u.ToCsv() + '#';
                     }
+
                     usersString = usersString.Remove(usersString.Length - 1);
-                    
+
                     streamWriter.WriteLine(usersString);
                     streamWriter.Flush();
-                    
+
                     Console.WriteLine("Zarejestrowano pomyślnie. Możesz się teraz zalogować.");
 
                     break;
@@ -96,6 +99,18 @@ public class LoginRegistrationForm
                     break;
             }
         } while (option != 0);
+    }
+
+    private static string GetInput()
+    {
+        string input = Console.ReadLine();
+        while (input is null or "")
+        {
+            Console.WriteLine("Wprowadź poprawne dane!");
+            input = Console.ReadLine();
+        }
+
+        return input;
     }
 
     private static List<User> ImportDataByPipe(StreamReader streamReader)
@@ -109,7 +124,7 @@ public class LoginRegistrationForm
             string[] userData = user.Split(';');
             usersList.Add(new User(userData[0], userData[1], userData[2], userData[3]));
         }
-        
+
         return usersList;
     }
 
@@ -166,9 +181,9 @@ public class LoginRegistrationForm
     private static User ValidateUser()
     {
         Console.WriteLine("Podaj pesel:");
-        string? pesel = Console.ReadLine();
+        string? pesel = GetInput();
         Console.WriteLine("Podaj hasło:");
-        string? password = Console.ReadLine();
+        string? password = GetInput();
 
         foreach (User user in _users)
         {

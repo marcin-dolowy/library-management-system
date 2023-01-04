@@ -61,12 +61,12 @@ public class Library
         {
             throw new NotALibraryUserException("Nie ma takiego użytkownika jak " + borrow.Pesel);
         }
-        
+
         if (!Publications.ContainsKey(borrow.Title))
         {
             throw new NoSuchTitleException("Brak takiego tytułu jak " + borrow.Title);
         }
-        
+
         Borrows.Add(borrow);
     }
 

@@ -121,7 +121,6 @@ public class LibraryControl
                         break;
                 }
             }
-            
         } while (option != (int)Option.Exit);
     }
 
@@ -138,7 +137,9 @@ public class LibraryControl
 
                 Borrow? borrow = Library.Borrows.FirstOrDefault(b => b.Title == title && b.Pesel == pesel);
 
-                _printer.PrintLine(Library.RemoveBorrow(borrow!) ? "Usunięto wypożyczenie" : "Brak wskazanego wypożyczenia");
+                _printer.PrintLine(Library.RemoveBorrow(borrow!)
+                    ? "Usunięto wypożyczenie"
+                    : "Brak wskazanego wypożyczenia");
             }
             else
             {
@@ -147,7 +148,9 @@ public class LibraryControl
 
                 Borrow? borrow = Library.Borrows.FirstOrDefault(b => b.Title == title && b.Pesel == CurrentUser.Pesel);
 
-                _printer.PrintLine(Library.RemoveBorrow(borrow!) ? "Usunięto wypożyczenie" : "Brak wskazanego wypożyczenia");
+                _printer.PrintLine(Library.RemoveBorrow(borrow!)
+                    ? "Usunięto wypożyczenie"
+                    : "Brak wskazanego wypożyczenia");
             }
         }
         catch (System.Exception)
@@ -199,6 +202,7 @@ public class LibraryControl
                 _printer.PrintLine(e.Message);
             }
         }
+
         _printer.PrintLine("Pomyślnie wypożyczono");
     }
 
@@ -352,7 +356,7 @@ public class LibraryControl
                 Library.Publications.Values.Where(p => p is Book).ToList().Cast<Book>().ToList();
             var isbn = _dataReader.ReadIsbnFromBook();
             var book = booksFromPublications.FirstOrDefault(b => b.Isbn == isbn);
-            
+
             _printer.PrintLine(Library.RemovePublication(book!) ? "Usunięto książkę" : "Brak wskazanej książki");
         }
         catch (System.Exception)
@@ -384,7 +388,6 @@ public class LibraryControl
                 }
             }
         }
-        
     }
 
     private static string GetEnumDescription(Enum value)
@@ -406,6 +409,7 @@ public class LibraryControl
         [Description("wypożycz publikacje")] BorrowPublication = 3,
         [Description("zwróć publikacje")] ReturnPublication = 4,
         [Description("Wyszukaj publikacje")] FindBook = 5,
+
         [Description("wyświetl wypożyczone publikacje")]
         PrintBorrowed = 6,
 

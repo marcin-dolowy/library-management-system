@@ -1,9 +1,7 @@
 ﻿namespace library_management_system.Exception;
 
-using System;
-
 [Serializable]
-public class NotALibraryUserException : Exception
+public class NotALibraryUserException : System.Exception
 {
     public NotALibraryUserException()
     {
