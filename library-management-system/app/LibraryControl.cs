@@ -188,6 +188,7 @@ public class LibraryControl
             try
             {
                 Library.AddBorrowed(new Borrow(CurrentUser.Pesel, title));
+                _printer.PrintLine("Pomyślnie wypożyczono");
             }
             catch (NoSuchTitleException e)
             {
@@ -202,8 +203,6 @@ public class LibraryControl
                 _printer.PrintLine(e.Message);
             }
         }
-
-        _printer.PrintLine("Pomyślnie wypożyczono");
     }
 
     private void PrintBorrowed()
@@ -399,23 +398,23 @@ public class LibraryControl
 
     private enum Option
     {
-        [Description("wyjście z programu")] Exit = 0,
+        [Description("Wyjście z programu")] Exit = 0,
 
-        [Description("wyświetl dostępne książki")]
+        [Description("Wyświetl dostępne książki")]
         PrintBooks = 1,
 
-        [Description("wyświetl dostępne magazyny")]
+        [Description("Wyświetl dostępne magazyny")]
         PrintMagazines = 2,
-        [Description("wypożycz publikacje")] BorrowPublication = 3,
-        [Description("zwróć publikacje")] ReturnPublication = 4,
+        [Description("Wypożycz publikacje")] BorrowPublication = 3,
+        [Description("Zwróć publikacje")] ReturnPublication = 4,
         [Description("Wyszukaj publikacje")] FindBook = 5,
 
-        [Description("wyświetl wypożyczone publikacje")]
+        [Description("Wyświetl wypożyczone publikacje")]
         PrintBorrowed = 6,
 
-        [Description("dodanie nowej książki")] AddBook = 7,
+        [Description("Dodanie nowej książki")] AddBook = 7,
 
-        [Description("dodanie nowego magazynu")]
+        [Description("Dodanie nowego magazynu")]
         AddMagazine = 8,
         [Description("Usuń książkę")] DeleteBook = 9,
         [Description("Usuń magazyn")] DeleteMagazine = 10,

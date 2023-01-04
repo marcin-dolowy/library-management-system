@@ -42,6 +42,6 @@ public class ConsolePrinter
 
     public void PrintLine(string text)
     {
-        Console.WriteLine(text.ToUpper());
+        Console.WriteLine(text);
     }
 }

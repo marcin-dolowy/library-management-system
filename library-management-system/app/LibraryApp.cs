@@ -79,7 +79,7 @@ class LibraryApp
         {
             message = message.Substring(7);
             string[] userData = message.Split(";");
-            Console.WriteLine("Zalogowany użytkowanik: " + message);
+            Console.WriteLine("Zalogowany użytkownik: " + message);
 
             LibraryUser loggedUser = new LibraryUser(userData[0], userData[1], userData[2], userData[3]);
 
