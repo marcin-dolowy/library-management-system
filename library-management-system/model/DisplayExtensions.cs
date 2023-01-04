@@ -8,4 +8,9 @@ public static class DisplayExtensions
     {
         return Regex.Replace(str, @"\s+", " - ");
     }
+    
+    public static string ChangeSemicolonsToDash(this string str)
+    {
+        return Regex.Replace(str, ";", " - ");
+    }
 }

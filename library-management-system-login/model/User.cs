@@ -2,8 +2,8 @@
 
 public class User
 {
-    public string FirstName { get; }
-    public string LastName { get; }
+    private string FirstName { get; }
+    private string LastName { get; }
     public string Pesel { get; }
     public string Password { get; }
 
@@ -15,16 +15,17 @@ public class User
         Password = password;
     }
 
-    protected bool Equals(User other)
+    private bool Equals(User other)
     {
-        return FirstName == other.FirstName && LastName == other.LastName && Pesel == other.Pesel && Password == other.Password;
+        return FirstName == other.FirstName && LastName == other.LastName && Pesel == other.Pesel &&
+               Password == other.Password;
     }
 
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((User)obj);
     }
 
@@ -32,7 +33,7 @@ public class User
     {
         return HashCode.Combine(FirstName, LastName, Pesel, Password);
     }
-    
+
     public string ToCsv()
     {
         return FirstName + ";" + LastName + ";" + Pesel + ";" + Password;

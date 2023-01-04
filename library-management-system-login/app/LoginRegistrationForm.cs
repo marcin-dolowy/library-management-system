@@ -5,11 +5,11 @@ namespace library_management_system_login.app;
 
 public class LoginRegistrationForm
 {
-    private static readonly string usersFileName =
+    private static readonly string UsersFileName =
         @"C:\Users\huber\RiderProjects\library-management-system\library-management-system\io\file\Library_users.csv";
 
     private static List<User> _users;
-    private static User _admin = new("admin", "admin", "00000000000", "admin");
+    private static readonly User Admin = new("admin", "admin", "00000000000", "admin");
 
     public static void Main()
     {
@@ -18,7 +18,7 @@ public class LoginRegistrationForm
 
         var streamWriter = new StreamWriter(pipeClient);
         var streamReader = new StreamReader(pipeClient);
-        
+
         int option = -1;
         do
         {
@@ -26,11 +26,20 @@ public class LoginRegistrationForm
             {
                 _users = ImportDataByPipe(streamReader);
             }
+
             Console.WriteLine("Wybierz opcje:");
             Console.WriteLine("0 - Wyjdź z systemu");
             Console.WriteLine("1 - Zaloguj się do systemu");
             Console.WriteLine("2 - Zarejestruj się do systemu");
-            option = int.Parse(Console.ReadLine());
+            try
+            {
+                option = int.Parse(Console.ReadLine()!);
+            }
+            catch (FormatException)
+            {
+                option = -1;
+            }
+
             switch (option)
             {
                 case 0:
@@ -109,11 +118,11 @@ public class LoginRegistrationForm
 
     private static string GetInput()
     {
-        string input = Console.ReadLine();
+        string input = Console.ReadLine()!;
         while (input is null or "")
         {
             Console.WriteLine("Wprowadź poprawne dane!");
-            input = Console.ReadLine();
+            input = Console.ReadLine()!;
         }
 
         return input;
@@ -126,14 +135,15 @@ public class LoginRegistrationForm
         string[] users = stringUsers.Split('#');
         //convert from string to users list
         return users.Select(user => user.Split(';'))
-            .Select(userData => new User(userData[0], userData[1], userData[2], userData[3])).ToList();
+            .Select(userData => new User(userData[0], userData[1], userData[2], userData[3]))
+            .ToList();
     }
 
     private static void ExportData()
     {
         try
         {
-            using StreamWriter file = new(usersFileName);
+            using StreamWriter file = new(UsersFileName);
             foreach (User user in _users)
             {
                 file.WriteLine(user.ToCsv());
@@ -141,7 +151,7 @@ public class LoginRegistrationForm
         }
         catch (IOException)
         {
-            throw new IOException("Błąd zapisu danych do pliku " + usersFileName);
+            throw new IOException("Błąd zapisu danych do pliku " + UsersFileName);
         }
     }
 
@@ -151,11 +161,11 @@ public class LoginRegistrationForm
         string pesel = GetInput();
         Console.WriteLine("Podaj hasło:");
         string password = GetInput();
-        if (pesel.Equals(_admin.Pesel) && password.Equals(_admin.Password))
+        if (pesel.Equals(Admin.Pesel) && password.Equals(Admin.Password))
         {
-            return _admin;
+            return Admin;
         }
 
-        return _users.FirstOrDefault(user => pesel.Equals(user.Pesel) && password.Equals(user.Password));
+        return _users.FirstOrDefault(user => pesel.Equals(user.Pesel) && password.Equals(user.Password))!;
     }
 }

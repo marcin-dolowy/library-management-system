@@ -13,7 +13,7 @@ public class LibraryControl
     private readonly DataReader _dataReader;
     private readonly IFileManager _fileManager;
 
-    public Library Library { get; set; }
+    public Library Library { get; }
     public LibraryUser CurrentUser { get; set; }
     public bool IsAdmin { get; set; }
 
@@ -167,6 +167,7 @@ public class LibraryControl
             try
             {
                 Library.AddBorrowed(borrow);
+                _printer.PrintLine("Pomyślnie wypożyczono");
             }
             catch (NoSuchTitleException e)
             {
@@ -251,6 +252,7 @@ public class LibraryControl
         try
         {
             Library.AddUser(libraryUser);
+            _printer.PrintLine("Uzytkownik dodany pomyślnie");
         }
         catch (UserAlreadyExistsException e)
         {
@@ -305,7 +307,7 @@ public class LibraryControl
             Publication magazine = Library.Publications.Values.Where(p => p is Magazine)
                 .SingleOrDefault(b => b.Title == title)!;
 
-            _printer.PrintLine(Library.RemovePublication(magazine!) ? "Usunięto magazyn" : "Brak wskazanego magazynu");
+            _printer.PrintLine(Library.RemovePublication(magazine) ? "Usunięto magazyn" : "Brak wskazanego magazynu");
         }
         catch (System.Exception)
         {
@@ -313,7 +315,7 @@ public class LibraryControl
         }
     }
 
-    public void Exit()
+    private void Exit()
     {
         try
         {
@@ -376,12 +378,12 @@ public class LibraryControl
         }
         else
         {
-            int i = 0;
+            var counter = 0;
             foreach (Option value in Enum.GetValues(typeof(Option)))
             {
                 _printer.PrintLine($"{(int)value} - {GetEnumDescription(value)}");
-                i++;
-                if (i == 7)
+                counter++;
+                if (counter == 7)
                 {
                     break;
                 }
@@ -399,23 +401,14 @@ public class LibraryControl
     private enum Option
     {
         [Description("Wyjście z programu")] Exit = 0,
-
-        [Description("Wyświetl dostępne książki")]
-        PrintBooks = 1,
-
-        [Description("Wyświetl dostępne magazyny")]
-        PrintMagazines = 2,
+        [Description("Wyświetl dostępne książki")] PrintBooks = 1,
+        [Description("Wyświetl dostępne magazyny")] PrintMagazines = 2,
         [Description("Wypożycz publikacje")] BorrowPublication = 3,
         [Description("Zwróć publikacje")] ReturnPublication = 4,
         [Description("Wyszukaj publikacje")] FindBook = 5,
-
-        [Description("Wyświetl wypożyczone publikacje")]
-        PrintBorrowed = 6,
-
+        [Description("Wyświetl wypożyczone publikacje")] PrintBorrowed = 6,
         [Description("Dodanie nowej książki")] AddBook = 7,
-
-        [Description("Dodanie nowego magazynu")]
-        AddMagazine = 8,
+        [Description("Dodanie nowego magazynu")] AddMagazine = 8,
         [Description("Usuń książkę")] DeleteBook = 9,
         [Description("Usuń magazyn")] DeleteMagazine = 10,
         [Description("Dodaj czytelnika")] AddUser = 11,

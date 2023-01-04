@@ -31,10 +31,7 @@ public abstract class Publication : ICsvConvertible, IComparable<Publication>
         {
             return 1;
         }
-        else
-        {
-            return -1;
-        }
+        return -1;
     }
 
     public override bool Equals(object? obj)

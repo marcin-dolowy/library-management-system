@@ -2,7 +2,7 @@
 
 public class FileReader : IDisposable
 {
-    private StreamReader _reader;
+    private readonly StreamReader _reader;
 
     public FileReader(string path)
     {

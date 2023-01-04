@@ -10,78 +10,87 @@ public class DataReader
 
     public DataReader(ConsolePrinter printer)
     {
-        this._printer = printer;
+        _printer = printer;
     }
 
     public Book ReadAndCreateBook()
     {
         _printer.PrintLine("Tytuł:");
-        string title = Console.ReadLine();
+        string title = GetString();
         _printer.PrintLine("Autor:");
-        string author = Console.ReadLine();
+        string author = GetString();
         _printer.PrintLine("Wydawnictwo:");
-        string publisher = Console.ReadLine();
+        string publisher = GetString();
         _printer.PrintLine("ISBN:");
-        string isbn = Console.ReadLine();
+        string isbn = GetString();
         if (!IsValidIsbn(isbn))
             throw new InvalidDataException();
         _printer.PrintLine("Rok wydania:");
-        int releaseDate = int.Parse(Console.ReadLine());
+        int releaseDate = GetInt();
         _printer.PrintLine("Liczba stron:");
-        int pages = int.Parse(Console.ReadLine());
+        int pages = GetInt();
         return new Book(title, author, releaseDate, pages, publisher, isbn);
     }
 
     public Magazine ReadAndCreateMagazine()
     {
         _printer.PrintLine("Tytuł:");
-        string title = Console.ReadLine();
+        string title = GetString();
         _printer.PrintLine("Wydawnictwo:");
-        string publisher = Console.ReadLine();
+        string publisher = GetString();
         _printer.PrintLine("Język:");
-        string language = Console.ReadLine();
+        string language = GetString();
         _printer.PrintLine("Rok wydania:");
-        int year = int.Parse(Console.ReadLine());
+        int year = GetInt();
         _printer.PrintLine("Miesiąc:");
-        int month = int.Parse(Console.ReadLine());
+        int month = GetInt();
         _printer.PrintLine("Dzień:");
-        int day = int.Parse(Console.ReadLine());
+        int day = GetInt();
         return new Magazine(title, publisher, language, year, month, day);
     }
 
     public LibraryUser CreateLibraryUser()
     {
         _printer.PrintLine("Imię");
-        string firstName = Console.ReadLine();
+        string firstName = GetString();
         _printer.PrintLine("Nazwisko");
-        string lastName = Console.ReadLine();
+        string lastName = GetString();
         _printer.PrintLine("Pesel");
-        string pesel = Console.ReadLine();
+        string pesel = GetString();
         _printer.PrintLine("Hasło");
-        string password = Console.ReadLine();
+        string password = GetString();
         return new LibraryUser(firstName, lastName, pesel, password);
+    }
+    
+    public Borrow CreateBorrow()
+    {
+        _printer.PrintLine("Pesel");
+        string pesel = GetString();
+        _printer.PrintLine("Tytuł");
+        string title = GetString();
+        return new Borrow(pesel, title);
     }
 
     public string ReadIsbnFromBook()
     {
         _printer.PrintLine("Wprowadź ISBN książki, którą chcesz usunąć");
-        return Console.ReadLine();
+        return GetString();
     }
 
     public string ReadTitleFromMagazine()
     {
         _printer.PrintLine("Podaj tytul magazynu, który chcesz usunąć");
-        return Console.ReadLine();
+        return GetString();
     }
 
     public string GetString()
     {
-        return Console.ReadLine();
+        return Console.ReadLine()!;
     }
 
     public int GetInt()
     {
-        return int.Parse(Console.ReadLine());
+        return int.Parse(Console.ReadLine()!);
     }
 
     private static bool IsValidIsbn(string isbn)
@@ -91,25 +100,12 @@ public class DataReader
             return false;
         }
 
-        if (!Regex.IsMatch(isbn, @"^\d{9}[\d|X]$|^\d{12}[\d|X]$"))
-        {
-            return false;
-        }
-
-        return true;
+        return Regex.IsMatch(isbn, @"^\d{9}[\d|X]$|^\d{12}[\d|X]$");
     }
 
     public bool ContainsOnlyDigits(string input)
     {
         return Regex.IsMatch(input, @"^\d+$");
     }
-
-    public Borrow CreateBorrow()
-    {
-        _printer.PrintLine("Pesel");
-        string pesel = Console.ReadLine();
-        _printer.PrintLine("Tytuł");
-        string title = Console.ReadLine();
-        return new Borrow(pesel, title);
-    }
+    
 }

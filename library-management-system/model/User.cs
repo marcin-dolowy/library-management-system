@@ -2,7 +2,7 @@
 
 public abstract class User : ICsvConvertible
 {
-    public string FirstName { get; }
+    protected string FirstName { get; }
     public string LastName { get; }
     public string Pesel { get; }
     public string Password { get; }
@@ -15,7 +15,7 @@ public abstract class User : ICsvConvertible
         Password = password;
     }
 
-    protected bool Equals(User other)
+    private bool Equals(User other)
     {
         return FirstName == other.FirstName && LastName == other.LastName && Pesel == other.Pesel &&
                Password == other.Password;
@@ -25,7 +25,7 @@ public abstract class User : ICsvConvertible
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((User)obj);
     }
 

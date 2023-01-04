@@ -2,14 +2,13 @@
 
 public class Borrow : ICsvConvertible
 {
-    public const string Type = "Borrow";
     public string Pesel { get; }
     public string Title { get; }
 
     public Borrow(string pesel, string title)
     {
-        this.Pesel = pesel;
-        this.Title = title;
+        Pesel = pesel;
+        Title = title;
     }
 
     public override string ToString()
@@ -19,11 +18,10 @@ public class Borrow : ICsvConvertible
 
     public string ToCsv()
     {
-        return Pesel + ";" +
-               Title;
+        return Pesel + ";" + Title;
     }
 
-    protected bool Equals(Borrow other)
+    private bool Equals(Borrow other)
     {
         return Pesel == other.Pesel && Title == other.Title;
     }
@@ -32,7 +30,7 @@ public class Borrow : ICsvConvertible
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((Borrow)obj);
     }
 
