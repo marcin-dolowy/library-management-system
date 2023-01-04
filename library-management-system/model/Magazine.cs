@@ -31,7 +31,7 @@ public class Magazine : Publication
         return base.ToString() + "; " + Month + "; " + Day + "; " + Language;
     }
 
-    protected bool Equals(Magazine other)
+    private bool Equals(Magazine other)
     {
         return base.Equals(other) && Month == other.Month && Day == other.Day && Language == other.Language;
     }
@@ -40,7 +40,7 @@ public class Magazine : Publication
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((Magazine)obj);
     }
 

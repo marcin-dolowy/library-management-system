@@ -13,7 +13,7 @@ public class LibraryControl
     private readonly DataReader _dataReader;
     private readonly IFileManager _fileManager;
 
-    public Library Library { get; set; }
+    public Library Library { get; }
     public LibraryUser CurrentUser { get; set; }
     public bool IsAdmin { get; set; }
 
@@ -305,7 +305,7 @@ public class LibraryControl
             Publication magazine = Library.Publications.Values.Where(p => p is Magazine)
                 .SingleOrDefault(b => b.Title == title)!;
 
-            _printer.PrintLine(Library.RemovePublication(magazine!) ? "Usunięto magazyn" : "Brak wskazanego magazynu");
+            _printer.PrintLine(Library.RemovePublication(magazine) ? "Usunięto magazyn" : "Brak wskazanego magazynu");
         }
         catch (System.Exception)
         {
@@ -376,12 +376,12 @@ public class LibraryControl
         }
         else
         {
-            int i = 0;
+            var counter = 0;
             foreach (Option value in Enum.GetValues(typeof(Option)))
             {
                 _printer.PrintLine($"{(int)value} - {GetEnumDescription(value)}");
-                i++;
-                if (i == 7)
+                counter++;
+                if (counter == 7)
                 {
                     break;
                 }

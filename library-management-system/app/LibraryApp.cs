@@ -4,7 +4,7 @@ using library_management_system.model;
 
 namespace library_management_system.app;
 
-class LibraryApp
+public class LibraryApp
 {
     private const string AppName = "Biblioteka";
 
@@ -18,8 +18,8 @@ class LibraryApp
 
         Process.Start(Path.Combine(Directory
                 .GetParent(Directory
-                    .GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName)
-                        .FullName).FullName).FullName, "library-management-system-login", "bin", "Debug", "net6.0",
+                    .GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
+                        .FullName)!.FullName)!.FullName, "library-management-system-login", "bin", "Debug", "net6.0",
             "library-management-system-login.exe"));
 
         var pipeServer = new NamedPipeServerStream("PipeExample", PipeDirection.InOut, 1);
@@ -28,7 +28,7 @@ class LibraryApp
         var streamReader = new StreamReader(pipeServer);
         var streamWriter = new StreamWriter(pipeServer);
 
-        string message = "";
+        string? message = "";
         while (message != null && !message.Contains("logged:"))
         {
             string users = "";
@@ -79,7 +79,7 @@ class LibraryApp
         {
             message = message.Substring(7);
             string[] userData = message.Split(";");
-            Console.WriteLine("Zalogowany użytkownik: " + message);
+            Console.WriteLine("Zalogowany użytkownik: " + message.ChangeSemicolonsToDash());
 
             LibraryUser loggedUser = new LibraryUser(userData[0], userData[1], userData[2], userData[3]);
 

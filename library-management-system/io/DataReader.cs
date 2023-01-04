@@ -10,7 +10,7 @@ public class DataReader
 
     public DataReader(ConsolePrinter printer)
     {
-        this._printer = printer;
+        _printer = printer;
     }
 
     public Book ReadAndCreateBook()
