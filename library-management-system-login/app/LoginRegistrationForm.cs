@@ -101,6 +101,7 @@ public class LoginRegistrationForm
                     break;
                 default:
                     Console.WriteLine("Brak takiej opcji.");
+                    option = 1;
                     break;
             }
         } while (option != 0);
