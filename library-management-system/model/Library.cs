@@ -5,7 +5,6 @@ namespace library_management_system.model;
 public class Library
 {
     public Dictionary<string, Publication> Publications { get; } = new();
-
     public Dictionary<string, LibraryUser> Users { get; set; } = new();
     public List<Borrow> Borrows { get; } = new();
 
@@ -16,10 +15,10 @@ public class Library
         return list;
     }
 
-    public ICollection<LibraryUser> GetSortedUsers(IComparer<LibraryUser> comparator)
+    public ICollection<LibraryUser> GetSortedUsers(IComparer<LibraryUser> comparer)
     {
         List<LibraryUser> list = new List<LibraryUser>(Users.Values);
-        list.Sort(comparator);
+        list.Sort(comparer);
         return list;
     }
 
