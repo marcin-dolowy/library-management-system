@@ -1,0 +1,81 @@
+@startuml
+
+class Book {
+    +Type: string
+    -Author: string
+    -Pages: string
+    +Isbn: string
+    
+    +Book()
+}
+
+class Borrow {
+    +Pesel: string
+    +Title: string
+    
+    +Borrow()
+}
+
+interface ICsvConvertible {
+    +ToCsv(): string
+}
+
+class DisplayExtensions {
+    +ChangeSpacesToDash(str: string): string
+    +ChangeSemicolonsToDash(str: string): string
+}
+
+class Library {
+    +Publications: Dictionary
+    +Users: Dictionary
+    +Borrows: List<Borrow>
+    
+    +GetSortedPublications(comparer: IComparer<Publication>): ICollection<Publication> 
+    +GetSortedUsers(comparer: IComparer<Publication>): ICollection<LibraryUser>
+    +AddPublication(publication: Publication): void
+    +AddUser(user: LibraryUser): void
+    +RemovePublication(pub Publication): bool
+    +AddBorrowed(borrow Borrow): void
+    +RemoveBorrow(borrow Borrow): bool
+}
+
+class LibraryUser {
+    +LibraryUser()
+}
+
+class Magazine {
+    +Type: string
+    -Month: int
+    -Day: int
+    -Language: string
+}
+
+abstract class Publication {
+    #Year: int
+    +Title: string
+    #Publisher: string
+    
+    # Publication()
+}
+
+abstract class User {
+    #FirstName: string
+    +LastName: string
+    +Pesel: string
+    +Password: string
+    
+    +User()
+}
+
+interface IComparable<Publication>
+
+Book --|> Publication
+Magazine --|> Publication
+Borrow ..|> ICsvConvertible
+Publication ..|> ICsvConvertible
+Publication --|> IComparable
+User <|-- LibraryUser
+User ..|> ICsvConvertible
+Library o--> Borrow : contains
+
+@enduml
