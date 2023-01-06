@@ -24,7 +24,7 @@ public class DataReader
         _printer.PrintLine("ISBN:");
         string isbn = GetString();
         if (!IsValidIsbn(isbn))
-            throw new InvalidDataException();
+            throw new InvalidDataException("ISBN musi składać się z 10 lub 13 cyfr!");
         _printer.PrintLine("Rok wydania:");
         int releaseDate = GetInt();
         _printer.PrintLine("Liczba stron:");
