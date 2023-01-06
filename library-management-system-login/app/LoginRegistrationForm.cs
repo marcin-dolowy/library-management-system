@@ -5,8 +5,20 @@ namespace library_management_system_login.app;
 
 public class LoginRegistrationForm
 {
-    private static readonly string UsersFileName =
-        @"C:\Users\huber\RiderProjects\library-management-system\library-management-system\io\file\Library_users.csv";
+    private static readonly string UsersFileName = Path.Combine(
+        Directory.GetParent(
+            Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
+                .FullName)!.FullName)!.FullName, "library-management-system", "io", "file", "Library_users.csv");
+    
+    private static readonly string LibraryFileName = Path.Combine(
+        Directory.GetParent(
+            Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
+                .FullName)!.FullName)!.FullName, "library-management-system", "io", "file", "Library.csv");
+    
+    private static readonly string BorrowsFileName = Path.Combine(
+        Directory.GetParent(
+            Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
+                .FullName)!.FullName)!.FullName, "library-management-system", "io", "file", "Borrowed.csv");
 
     private static List<User> _users;
     private static readonly User Admin = new("admin", "admin", "00000000000", "admin");
@@ -143,10 +155,20 @@ public class LoginRegistrationForm
     {
         try
         {
-            using StreamWriter file = new(UsersFileName);
+            using StreamWriter usersFile = new(UsersFileName);
             foreach (User user in _users)
             {
-                file.WriteLine(user.ToCsv());
+                usersFile.WriteLine(user.ToCsv());
+            }
+
+            if (!File.Exists(LibraryFileName))
+            {
+                File.Create(LibraryFileName);
+            }
+
+            if (!File.Exists(BorrowsFileName))
+            {
+                File.Create(BorrowsFileName);
             }
         }
         catch (IOException)
