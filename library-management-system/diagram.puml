@@ -73,7 +73,7 @@ Book --|> Publication
 Magazine --|> Publication
 Borrow ..|> ICsvConvertible
 Publication ..|> ICsvConvertible
-Publication --|> IComparable
+Publication ..|> IComparable
 User <|-- LibraryUser
 User ..|> ICsvConvertible
 Library o--> Borrow : contains
