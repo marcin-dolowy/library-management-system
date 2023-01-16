@@ -7,19 +7,25 @@ namespace library_management_system.io.file;
 public class CsvFileManager : IFileManager
 {
     private static readonly string FileName =
-        Path.Combine(
-            Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
-                .FullName)!.FullName, "io", "file", "Library.csv");
+        Path.Combine(Directory.GetCurrentDirectory(), "Library.csv");
+    
+        // Path.Combine(
+        //     Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
+        //         .FullName)!.FullName, "io", "file", "Library.csv");
 
     private static readonly string UsersFileName =
-        Path.Combine(
-            Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
-                .FullName)!.FullName, "io", "file", "Library_users.csv");
+        Path.Combine(Directory.GetCurrentDirectory(), "Library_users.csv");
+
+        // Path.Combine(
+        //     Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
+        //         .FullName)!.FullName, "io", "file", "Library_users.csv");
 
     private static readonly string BorrowedFileName =
-        Path.Combine(
-            Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
-                .FullName)!.FullName, "io", "file", "Borrowed.csv");
+        Path.Combine(Directory.GetCurrentDirectory(), "Borrowed.csv");
+
+        // Path.Combine(
+        //     Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
+        //         .FullName)!.FullName, "io", "file", "Borrowed.csv");
 
     public Library ImportData()
     {

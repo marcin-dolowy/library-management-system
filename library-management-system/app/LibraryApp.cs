@@ -10,6 +10,14 @@ public static class LibraryApp
 
     public static void Main()
     {
+        // TEST
+        // Console.WriteLine(Path.Combine(Directory
+        //         .GetParent(Directory
+        //             .GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
+        //                 .FullName)!.FullName)!.FullName, "library-management-system-login", "bin", "Debug", "net6.0",
+        //     "library-management-system-login.exe"));
+        // Console.WriteLine(Path.Combine(Directory.GetCurrentDirectory(), "library-management-system-login.exe"));
+        
         LibraryUser admin = new("admin", "admin", "00000000000", "admin");
         Console.WriteLine(AppName);
 
