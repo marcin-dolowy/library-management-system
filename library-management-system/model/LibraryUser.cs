@@ -1,6 +1,6 @@
 ﻿namespace library_management_system.model;
 
-public class LibraryUser : User
+public record LibraryUser : User
 {
     public LibraryUser(string firstName, string lastName, string pesel, string password) : base(firstName, lastName,
         pesel, password)
