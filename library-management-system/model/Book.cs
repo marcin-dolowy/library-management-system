@@ -1,6 +1,6 @@
 ﻿namespace library_management_system.model;
 
-public record Book : Publication
+public class Book : Publication
 {
     public const string Type = "Książka";
     private string Author { get; }

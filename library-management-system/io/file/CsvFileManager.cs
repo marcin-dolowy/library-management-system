@@ -19,10 +19,10 @@ public class CsvFileManager : IFileManager
             throw new DataImportException(
                 $"Plik {FileName}, {UsersFileName} lub/i {BorrowedFileName} nie został znaleziony.");
         }
-        
+
         Library library = new Library();
-        
-        
+
+
         Task<string> importPublicationsTask = ImportFromFile(FileName);
         importPublicationsTask.ContinueWith(task =>
         {
@@ -38,7 +38,7 @@ public class CsvFileManager : IFileManager
                 library.AddPublication(publication);
             }
         });
-        
+
         Task<string> importUsersTask = ImportFromFile(UsersFileName);
         importUsersTask.ContinueWith(task =>
         {
@@ -54,7 +54,7 @@ public class CsvFileManager : IFileManager
                 library.AddUser(user);
             }
         });
-        
+
         Task<string> importBorrowedTask = ImportFromFile(BorrowedFileName);
         importBorrowedTask.ContinueWith(task =>
         {
@@ -70,11 +70,11 @@ public class CsvFileManager : IFileManager
                 library.AddBorrowed(borrow);
             }
         });
-        
+
         Task.WaitAll(importPublicationsTask, importUsersTask, importBorrowedTask);
         return library;
     }
-    
+
     private static async Task<string> ImportFromFile(string fileName)
     {
         try
@@ -91,7 +91,7 @@ public class CsvFileManager : IFileManager
             throw new DataImportException($"Błąd odczytu pliku {BorrowedFileName}.");
         }
     }
-    
+
     private static LibraryUser CreateUserFromString(string csvText)
     {
         string[] split = csvText.Split(";");

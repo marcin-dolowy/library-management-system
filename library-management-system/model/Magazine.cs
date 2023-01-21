@@ -1,6 +1,6 @@
 ﻿namespace library_management_system.model;
 
-public record Magazine : Publication
+public class Magazine : Publication
 {
     public const string Type = "Magazyn";
     private int Month { get; }

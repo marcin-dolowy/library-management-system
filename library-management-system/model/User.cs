@@ -1,6 +1,6 @@
 ﻿namespace library_management_system.model;
 
-public abstract record User : ICsvConvertible
+public abstract class User : ICsvConvertible
 {
     protected string FirstName { get; }
     public string LastName { get; }

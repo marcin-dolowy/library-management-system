@@ -2,7 +2,7 @@
 
 namespace library_management_system.model;
 
-public record Library
+public class Library
 {
     public Dictionary<string, Publication> Publications { get; } = new();
     public Dictionary<string, LibraryUser> Users { get; set; } = new();

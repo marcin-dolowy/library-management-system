@@ -1,6 +1,6 @@
 ﻿namespace library_management_system.model;
 
-public record Borrow : ICsvConvertible
+public class Borrow : ICsvConvertible
 {
     public string Pesel { get; }
     public string Title { get; }

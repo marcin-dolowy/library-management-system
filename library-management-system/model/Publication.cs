@@ -1,6 +1,6 @@
 ﻿namespace library_management_system.model;
 
-public abstract record Publication : ICsvConvertible, IComparable<Publication>
+public abstract class Publication : ICsvConvertible, IComparable<Publication>
 {
     protected int Year { get; }
     public string Title { get; }
