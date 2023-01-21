@@ -5,20 +5,11 @@ namespace library_management_system_login.app;
 
 public class LoginRegistrationForm
 {
-    private static readonly string UsersFileName = Path.Combine(
-        Directory.GetParent(
-            Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
-                .FullName)!.FullName)!.FullName, "library-management-system", "io", "file", "Library_users.csv");
+    private static readonly string UsersFileName = "Library_users.csv";
     
-    private static readonly string LibraryFileName = Path.Combine(
-        Directory.GetParent(
-            Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
-                .FullName)!.FullName)!.FullName, "library-management-system", "io", "file", "Library.csv");
+    private static readonly string LibraryFileName = "Library.csv";
     
-    private static readonly string BorrowsFileName = Path.Combine(
-        Directory.GetParent(
-            Directory.GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
-                .FullName)!.FullName)!.FullName, "library-management-system", "io", "file", "Borrowed.csv");
+    private static readonly string BorrowsFileName = "Borrowed.csv";
 
     private static List<User> _users;
     private static readonly User Admin = new("admin", "admin", "00000000000", "admin");
