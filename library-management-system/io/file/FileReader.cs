@@ -10,7 +10,7 @@ public class FileReader : IDisposable
         _reader = new StreamReader(path);
     }
 
-    public Task<string?> ReadToEndAsync()
+    public Task<string> ReadToEndAsync()
     {
         return _reader.ReadToEndAsync();
     }

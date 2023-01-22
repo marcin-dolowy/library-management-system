@@ -79,8 +79,13 @@ public class CsvFileManager : IFileManager
     {
         try
         {
-            using FileReader reader = new FileReader(fileName);
-            return await reader.ReadToEndAsync();
+            string readToEnd;
+            using (FileReader reader = new FileReader(fileName))
+            {
+                readToEnd = await reader.ReadToEndAsync();
+                reader.Dispose();
+            }
+            return readToEnd;
         }
         catch (FileNotFoundException)
         {
