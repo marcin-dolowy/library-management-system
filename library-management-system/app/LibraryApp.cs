@@ -24,11 +24,11 @@ public static class LibraryApp
         LibraryUser defaultUser = new LibraryUser("default", "default", "default", "default");
         LibraryControl libControl = new LibraryControl(defaultUser, false);
 
-        Process.Start(Path.Combine(Directory
-                .GetParent(Directory
-                    .GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
-                        .FullName)!.FullName)!.FullName, "library-management-system-login", "bin", "Debug", "net6.0",
-            "library-management-system-login.exe"));
+        // Process.Start(Path.Combine(Directory
+        //         .GetParent(Directory
+        //             .GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
+        //                 .FullName)!.FullName)!.FullName, "library-management-system-login", "bin", "Debug", "net6.0",
+        //     "library-management-system-login.exe"));
 
         var pipeServer = new NamedPipeServerStream("PipeExample", PipeDirection.InOut, 1);
 

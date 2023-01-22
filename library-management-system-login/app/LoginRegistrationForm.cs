@@ -1,5 +1,5 @@
 ﻿using System.IO.Pipes;
-using library_management_system_login.model;
+using library_management_system.model;
 
 namespace library_management_system_login.app;
 
@@ -11,8 +11,8 @@ public class LoginRegistrationForm
     
     private static readonly string BorrowsFileName = "Borrowed.csv";
 
-    private static List<User> _users;
-    private static readonly User Admin = new("admin", "admin", "00000000000", "admin");
+    private static List<LibraryUser> _users;
+    private static readonly User Admin = new LibraryUser("admin", "admin", "00000000000", "admin");
 
     public static void Main()
     {
@@ -87,7 +87,7 @@ public class LoginRegistrationForm
                     Console.WriteLine("Podaj hasło:");
                     string password = GetInput();
 
-                    User newUser = new User(firstName, lastName, pesel, password);
+                    LibraryUser newUser = new LibraryUser(firstName, lastName, pesel, password);
 
                     if (_users.Any(p => p.Pesel.Equals(pesel)))
                     {
@@ -131,15 +131,19 @@ public class LoginRegistrationForm
         return input;
     }
 
-    private static List<User> ImportDataByPipe(StreamReader streamReader)
+    private static List<LibraryUser> ImportDataByPipe(StreamReader streamReader)
     {
         var stringUsers = streamReader.ReadLine();
 
         string[] users = stringUsers.Split('#');
         //convert from string to users list
         return users.Select(user => user.Split(';'))
-            .Select(userData => new User(userData[0], userData[1], userData[2], userData[3]))
+            .Select(userData => new LibraryUser(userData[0], userData[1], userData[2], userData[3]))
             .ToList();
+        
+        // return users.Select(user => user.Split(';'))
+        //     .Select(userData => new LibraryUser(userData[0], userData[1], userData[2], userData[3]))
+        //     .ToList();
     }
 
     private static void ExportData()
