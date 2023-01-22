@@ -8,14 +8,14 @@ public class Library
     public Dictionary<string, LibraryUser> Users { get; set; } = new();
     public List<Borrow> Borrows { get; } = new();
 
-    public IEnumerable<Publication> GetSortedPublications(IComparer<Publication> comparer)
+    public ICollection<Publication> GetSortedPublications(IComparer<Publication> comparer)
     {
         List<Publication> list = new List<Publication>(Publications.Values);
         list.Sort(comparer);
         return list;
     }
 
-    public IEnumerable<LibraryUser> GetSortedUsers(IComparer<LibraryUser> comparer)
+    public ICollection<LibraryUser> GetSortedUsers(IComparer<LibraryUser> comparer)
     {
         List<LibraryUser> list = new List<LibraryUser>(Users.Values);
         list.Sort(comparer);
@@ -74,36 +74,5 @@ public class Library
         if (!Borrows.Contains(borrow)) return false;
         Borrows.Remove(borrow);
         return true;
-    }
-
-    public virtual bool Equals(Library? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Publications.Equals(other.Publications) && Users.Equals(other.Users) && Borrows.Equals(other.Borrows);
-    }
-
-    private sealed class PublicationsUsersBorrowsEqualityComparer : IEqualityComparer<Library>
-    {
-        public bool Equals(Library x, Library y)
-        {
-            if (ReferenceEquals(x, y)) return true;
-            if (ReferenceEquals(x, null)) return false;
-            if (ReferenceEquals(y, null)) return false;
-            if (x.GetType() != y.GetType()) return false;
-            return x.Publications.Equals(y.Publications) && x.Users.Equals(y.Users) && x.Borrows.Equals(y.Borrows);
-        }
-
-        public int GetHashCode(Library obj)
-        {
-            return HashCode.Combine(obj.Publications, obj.Users, obj.Borrows);
-        }
-    }
-
-    public static IEqualityComparer<Library> PublicationsUsersBorrowsComparer { get; } = new PublicationsUsersBorrowsEqualityComparer();
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Publications, Users, Borrows);
     }
 }
