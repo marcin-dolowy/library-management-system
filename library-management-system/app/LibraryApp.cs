@@ -1,27 +1,45 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Specialized;
 using System.IO.Pipes;
 using library_management_system.model;
+
+using System.Configuration;
+using System.Diagnostics;
 
 namespace library_management_system.app;
 
 public static class LibraryApp
 {
     private const string AppName = "Biblioteka";
-
+    
     public static void Main()
     {
+        
+        //Console.WriteLine("=============");
+        string currentDirectory = TryGetSolutionDirectoryInfo().ToString();
+
+        //Console.WriteLine(currentDirectory);
+        
+        
+        string correctDirectory = CorrectExePath(currentDirectory);
+        
+        //Console.WriteLine(correctDirectory);
+        
+
         LibraryUser admin = new("admin", "admin", "00000000000", "admin");
         Console.WriteLine(AppName);
 
         LibraryUser defaultUser = new LibraryUser("default", "default", "default", "default");
         LibraryControl libControl = new LibraryControl(defaultUser, false);
+        
 
-        Process.Start(Path.Combine(Directory
-                .GetParent(Directory
-                    .GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
-                        .FullName)!.FullName)!.FullName, "library-management-system-login", "bin", "Debug", "net6.0",
-            "library-management-system-login.exe"));
+        // Process.Start(Path.Combine(Directory
+        //         .GetParent(Directory
+        //             .GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName)!
+        //                 .FullName)!.FullName)!.FullName, "library-management-system-login", "bin", "Debug", "net6.0",
+        //     "library-management-system-login.exe"));
 
+        Process.Start(correctDirectory);
+        
         var pipeServer = new NamedPipeServerStream("PipeExample", PipeDirection.InOut, 1);
 
         pipeServer.WaitForConnection();
@@ -80,4 +98,51 @@ public static class LibraryApp
             libControl.ControlLoop();
         }
     }
+    
+    public static DirectoryInfo TryGetSolutionDirectoryInfo(string? currentPath = null)
+    {
+        var directory = new DirectoryInfo(
+            currentPath ?? Directory.GetCurrentDirectory());
+        while (directory != null && !directory.GetDirectories("library-management-system-login").Any())
+        {
+            directory = directory.Parent;
+        }
+
+        return directory;
+    }
+
+    public static string CorrectExePath(string currentDirectory)
+    {
+        bool exeFound = false;
+        var correct = Directory.GetDirectories(currentDirectory)
+            .FirstOrDefault(s1 => s1.Contains("library-management-system-login"));
+        string correctDirectory = null;
+        while (!exeFound)
+        {
+            string[] subDirectories = Directory.GetDirectories(correct);
+            foreach (string subDirectory in subDirectories)
+            {
+                //Console.WriteLine(subDirectory);
+                string[] files = Directory.GetFiles(subDirectory, "*.exe", SearchOption.AllDirectories);
+                foreach (string file in files)
+                {
+                    //Console.WriteLine(file);
+
+                    if (Path.GetFileName(file) == "library-management-system-login.exe")
+                    {
+                        Console.WriteLine("Found .exe in: " + subDirectory);
+                        correctDirectory = file;
+                        exeFound = true;
+                        break;
+                    }
+                }
+
+                if (!exeFound)
+                    correct = subDirectory;
+            }
+        }
+
+        return correctDirectory;
+    }
+    
 }

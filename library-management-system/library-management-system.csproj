@@ -8,4 +8,18 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <None Include="bin\Debug\net6.0\Borrowed.csv" />
+      <None Include="bin\Debug\net6.0\Library.csv" />
+      <None Include="bin\Debug\net6.0\Library_users.csv" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="bin\Debug\net6.0\library-management-system-login.exe" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="bin\Debug\net6.0" />
+    </ItemGroup>
+
 </Project>
