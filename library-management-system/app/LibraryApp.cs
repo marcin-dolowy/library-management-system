@@ -4,6 +4,7 @@ using library_management_system.model;
 
 using System.Configuration;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace library_management_system.app;
 
@@ -113,6 +114,16 @@ public static class LibraryApp
 
     public static string CorrectExePath(string currentDirectory)
     {
+        string fileexe;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            fileexe = "library-management-system-login.exe";
+        }
+        else
+        {
+            fileexe = "library-management-system-login";
+        }
+        
         bool exeFound = false;
         var correct = Directory.GetDirectories(currentDirectory)
             .FirstOrDefault(s1 => s1.Contains("library-management-system-login"));
@@ -128,7 +139,7 @@ public static class LibraryApp
                 {
                     //Console.WriteLine(file);
 
-                    if (Path.GetFileName(file) == "library-management-system-login.exe")
+                    if (Path.GetFileName(file) == fileexe)
                     {
                         Console.WriteLine("Found .exe in: " + subDirectory);
                         correctDirectory = file;
