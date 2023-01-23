@@ -61,7 +61,7 @@ public class DataReader
         string password = GetString();
         return new LibraryUser(firstName, lastName, pesel, password);
     }
-    
+
     public Borrow CreateBorrow()
     {
         _printer.PrintLine("Pesel");
@@ -107,5 +107,4 @@ public class DataReader
     {
         return Regex.IsMatch(input, @"^\d+$");
     }
-    
 }

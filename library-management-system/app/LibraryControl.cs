@@ -25,7 +25,7 @@ public class LibraryControl
         _fileManager = new FileManagerBuilder(_printer, _dataReader).Build();
         try
         {
-            Library = _fileManager.ImportData();
+            Library = _fileManager.ImportData().Result;
             _printer.PrintLine("Zaimportowano dane z pliku");
         }
         catch (System.Exception e) when (e is DataImportException or InvalidDataException)
@@ -396,14 +396,22 @@ public class LibraryControl
     private enum Option
     {
         [Description("Wyjście z programu")] Exit = 0,
-        [Description("Wyświetl dostępne książki")] PrintBooks = 1,
-        [Description("Wyświetl dostępne magazyny")] PrintMagazines = 2,
+
+        [Description("Wyświetl dostępne książki")]
+        PrintBooks = 1,
+
+        [Description("Wyświetl dostępne magazyny")]
+        PrintMagazines = 2,
         [Description("Wypożycz publikacje")] BorrowPublication = 3,
         [Description("Zwróć publikacje")] ReturnPublication = 4,
         [Description("Wyszukaj publikacje")] FindBook = 5,
-        [Description("Wyświetl wypożyczone publikacje")] PrintBorrowed = 6,
+
+        [Description("Wyświetl wypożyczone publikacje")]
+        PrintBorrowed = 6,
         [Description("Dodanie nowej książki")] AddBook = 7,
-        [Description("Dodanie nowego magazynu")] AddMagazine = 8,
+
+        [Description("Dodanie nowego magazynu")]
+        AddMagazine = 8,
         [Description("Usuń książkę")] DeleteBook = 9,
         [Description("Usuń magazyn")] DeleteMagazine = 10,
         [Description("Dodaj czytelnika")] AddUser = 11,

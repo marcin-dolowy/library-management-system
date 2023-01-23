@@ -12,7 +12,7 @@ public class CsvFileManager : IFileManager
 
     private static readonly string BorrowedFileName = "Borrowed.csv";
 
-    public Library ImportData()
+    public async Task<Library> ImportData()
     {
         if (!File.Exists(FileName) || !File.Exists(UsersFileName) || !File.Exists(BorrowedFileName))
         {
@@ -21,71 +21,33 @@ public class CsvFileManager : IFileManager
         }
 
         Library library = new Library();
-
-
-        Task<string> importPublicationsTask = ImportFromFile(FileName);
-        importPublicationsTask.ContinueWith(task =>
-        {
-            if (task.IsFaulted)
-            {
-                throw new DataImportException($"Błąd odczytu pliku {FileName}.");
-            }
-
-            string[] split = task.Result.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-            foreach (var line in split)
-            {
-                var publication = CreateObjectFromString(line);
-                library.AddPublication(publication);
-            }
-        });
-
-        Task<string> importUsersTask = ImportFromFile(UsersFileName);
-        importUsersTask.ContinueWith(task =>
-        {
-            if (task.IsFaulted)
-            {
-                throw new DataImportException($"Błąd odczytu pliku {UsersFileName}.");
-            }
-
-            string[] split = task.Result.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-            foreach (var line in split)
-            {
-                var user = CreateUserFromString(line);
-                library.AddUser(user);
-            }
-        });
-
-        Task<string> importBorrowedTask = ImportFromFile(BorrowedFileName);
-        importBorrowedTask.ContinueWith(task =>
-        {
-            if (task.IsFaulted)
-            {
-                throw new DataImportException($"Błąd odczytu pliku {BorrowedFileName}.");
-            }
-
-            string[] split = task.Result.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-            foreach (var line in split)
-            {
-                var borrow = CreateBorrowFromString(line);
-                library.AddBorrowed(borrow);
-            }
-        });
-
-        Task.WaitAll(importPublicationsTask, importUsersTask, importBorrowedTask);
+        var (task1, task2, task3) = (ImportPublications(library), ImportUsers(library), ImportBorrowed(library));
+        await task1;
+        await task2;
+        await task3;
         return library;
     }
 
-    private static async Task<string> ImportFromFile(string fileName)
+    private static Task ImportBorrowed(Library library)
     {
         try
         {
-            string readToEnd;
-            using (FileReader reader = new FileReader(fileName))
+            using (FileReader reader = new FileReader(BorrowedFileName))
             {
-                readToEnd = await reader.ReadToEndAsync();
+                while (true)
+                {
+                    string? line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+
+                    var borrow = CreateBorrowFromString(line);
+                    library.AddBorrowed(borrow);
+                }
+
                 reader.Dispose();
             }
-            return readToEnd;
         }
         catch (FileNotFoundException)
         {
@@ -95,6 +57,74 @@ public class CsvFileManager : IFileManager
         {
             throw new DataImportException($"Błąd odczytu pliku {BorrowedFileName}.");
         }
+
+        return Task.CompletedTask;
+    }
+
+    private static Task ImportPublications(Library library)
+    {
+        try
+        {
+            using (FileReader reader = new FileReader(FileName))
+            {
+                while (true)
+                {
+                    string? line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+
+                    var publication = CreateObjectFromString(line);
+                    library.AddPublication(publication);
+                }
+
+                reader.Dispose();
+            }
+        }
+        catch (FileNotFoundException)
+        {
+            throw new DataImportException($"Plik {FileName} nie został znaleziony.");
+        }
+        catch (IOException)
+        {
+            throw new DataImportException($"Błąd odczytu pliku {FileName}.");
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private static Task ImportUsers(Library library)
+    {
+        try
+        {
+            using (FileReader reader = new FileReader(UsersFileName))
+            {
+                while (true)
+                {
+                    string? line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+
+                    var user = CreateUserFromString(line);
+                    library.AddUser(user);
+                }
+
+                reader.Dispose();
+            }
+        }
+        catch (FileNotFoundException)
+        {
+            throw new DataImportException($"Plik {UsersFileName} nie został znaleziony.");
+        }
+        catch (IOException)
+        {
+            throw new DataImportException($"Błąd odczytu pliku {UsersFileName}.");
+        }
+
+        return Task.CompletedTask;
     }
 
     private static LibraryUser CreateUserFromString(string csvText)

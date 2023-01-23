@@ -10,12 +10,16 @@ public class FileReader : IDisposable
         _reader = new StreamReader(path);
     }
 
-    public Task<string> ReadToEndAsync()
+    public string ReadLine()
     {
-        return _reader.ReadToEndAsync();
+        return _reader.ReadLine();
     }
 
-    public void Dispose() => Dispose(true);
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
     protected virtual void Dispose(bool disposing)
     {
