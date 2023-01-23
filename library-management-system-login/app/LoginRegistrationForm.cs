@@ -92,6 +92,7 @@ public class LoginRegistrationForm
                     if (_users.Any(p => p.Pesel.Equals(pesel)))
                     {
                         Console.WriteLine("Użytkownik o podanym peselu już istnieje!");
+                        option = 1;
                         break;
                     }
 
