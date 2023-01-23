@@ -81,7 +81,7 @@ public static class LibraryApp
         }
     }
 
-    public static DirectoryInfo TryGetSolutionDirectoryInfo(string? currentPath = null)
+    private static DirectoryInfo TryGetSolutionDirectoryInfo(string? currentPath = null)
     {
         var directory = new DirectoryInfo(
             currentPath ?? Directory.GetCurrentDirectory());
@@ -93,7 +93,7 @@ public static class LibraryApp
         return directory;
     }
 
-    public static string CorrectExePath(string currentDirectory)
+    private static string CorrectExePath(string currentDirectory)
     {
         string fileexe;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
