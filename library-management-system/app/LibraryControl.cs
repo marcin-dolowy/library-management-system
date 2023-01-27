@@ -28,7 +28,7 @@ public class LibraryControl
             Library = _fileManager.ImportData().Result;
             _printer.PrintLine("Zaimportowano dane z pliku");
         }
-        catch (System.Exception e) when (e is DataImportException or InvalidDataException)
+        catch (System.Exception e) when (e is DataImportException or InvalidDataException or AggregateException)
         {
             _printer.PrintLine(e.Message);
             _printer.PrintLine("Zainicjowano nową bazę.");
