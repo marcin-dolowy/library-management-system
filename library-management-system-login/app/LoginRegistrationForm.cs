@@ -141,10 +141,6 @@ public class LoginRegistrationForm
         return users.Select(user => user.Split(';'))
             .Select(userData => new LibraryUser(userData[0], userData[1], userData[2], userData[3]))
             .ToList();
-        
-        // return users.Select(user => user.Split(';'))
-        //     .Select(userData => new LibraryUser(userData[0], userData[1], userData[2], userData[3]))
-        //     .ToList();
     }
 
     private static void ExportData()
